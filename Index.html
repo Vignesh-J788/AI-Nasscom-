@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NASSCOM Digital Edge 101 — Official Study Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --ink:       #0E0E10;
+  --ink2:      #18181C;
+  --ink3:      #242428;
+  --red:       #C0001A;
+  --red2:      #E5001F;
+  --red3:      #FF1A36;
+  --red-dim:   rgba(192,0,26,0.12);
+  --red-mid:   rgba(192,0,26,0.35);
+  --bone:      #F5F0E8;
+  --bone2:     #E8E2D8;
+  --muted:     #6B6870;
+  --muted2:    #9B9AA0;
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(192,0,26,0.3);
+
+  --display:  'Bebas Neue', sans-serif;
+  --serif:    'Lora', Georgia, serif;
+  --mono:     'IBM Plex Mono', monospace;
+  --body:     'Manrope', sans-serif;
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; font-size:16px; }
+
+body {
+  background: var(--ink);
+  color: var(--bone);
+  font-family: var(--body);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── STICKY TOP NAV ── */
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: rgba(14,14,16,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 48px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.top-nav::-webkit-scrollbar { display:none; }
+
+.nav-brand {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--red3);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  margin-right: 24px;
+  flex-shrink: 0;
+}
+
+.nav-pills {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.nav-pill {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 3px;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all .15s;
+  border: 1px solid transparent;
+  text-decoration: none;
+}
+.nav-pill:hover { color: var(--bone); background: var(--ink3); }
+.nav-pill.active { color: var(--red3); border-color: var(--border2); background: var(--red-dim); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 60px 64px 56px;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 60% at 80% 50%, rgba(192,0,26,.18) 0%, transparent 70%),
+    radial-gradient(ellipse 30% 40% at 20% 80%, rgba(192,0,26,.08) 0%, transparent 70%);
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, transparent, rgba(0,0,0,.4) 40%, transparent);
+}
+
+.hero-content { position:relative; z-index:2; max-width: 760px; }
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--red3);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hero-eyebrow::before {
+  content:'';
+  display:inline-block;
+  width:28px; height:2px;
+  background:var(--red);
+}
+
+.hero-title {
+  font-family: var(--display);
+  font-size: clamp(56px, 7vw, 96px);
+  line-height: .95;
+  letter-spacing: .02em;
+  color: var(--bone);
+  margin-bottom: 20px;
+}
+.hero-title span { color: var(--red); }
+
+.hero-desc {
+  font-size: 15px;
+  color: var(--muted2);
+  max-width: 520px;
+  line-height: 1.75;
+  margin-bottom: 36px;
+}
+
+.hero-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 5px 14px;
+  border-radius: 2px;
+  background: var(--ink3);
+  border: 1px solid var(--border);
+  color: var(--muted2);
+}
+.chip.red { background: var(--red-dim); border-color: var(--border2); color: var(--red3); }
+
+/* ── CURRICULUM BAR ── */
+.curriculum-bar {
+  background: var(--ink2);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 64px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+}
+.cb-item {
+  padding: 12px 20px;
+  border-right: 1px solid var(--border);
+}
+.cb-item:last-child { border-right:none; }
+.cb-val {
+  font-family: var(--display);
+  font-size: 32px;
+  color: var(--bone);
+  line-height: 1;
+}
+.cb-val span { color:var(--red); }
+.cb-lbl {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-top: 4px;
+}
+
+/* ── PATHWAY NOTE ── */
+.pathway-note {
+  margin: 32px 64px;
+  padding: 16px 20px;
+  background: var(--red-dim);
+  border: 1px solid var(--border2);
+  border-left: 4px solid var(--red);
+  border-radius: 0 6px 6px 0;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: 13px;
+  color: var(--bone2);
+  line-height: 1.6;
+}
+.pn-icon { font-size:20px; flex-shrink:0; margin-top:1px; }
+
+/* ── MODULE CHAPTER DIVIDER ── */
+.chapter-div {
+  position: relative;
+  background: var(--ink2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 40px 64px;
+  overflow: hidden;
+  margin-top: 64px;
+}
+.chapter-div:first-of-type { margin-top: 0; }
+
+.ch-ghost {
+  position:absolute;
+  right: 48px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--display);
+  font-size: 160px;
+  line-height: 1;
+  color: rgba(192,0,26,.08);
+  letter-spacing: .04em;
+  pointer-events:none;
+  user-select:none;
+}
+
+.ch-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--red3);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.ch-title {
+  font-family: var(--display);
+  font-size: clamp(32px, 4vw, 52px);
+  color: var(--bone);
+  line-height: 1.05;
+  max-width: 600px;
+  margin-bottom: 12px;
+}
+
+.ch-focus {
+  font-size: 13px;
+  color: var(--muted2);
+  font-style: italic;
+  font-family: var(--serif);
+  max-width: 560px;
+  line-height: 1.6;
+}
+
+.ch-pathways {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ch-pathway {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--muted);
+  background: var(--ink);
+}
+
+/* ── MODULE BODY ── */
+.module-body {
+  padding: 40px 64px 0;
+}
+
+/* overview */
+.overview {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--bone2);
+  line-height: 1.85;
+  max-width: 740px;
+  margin-bottom: 40px;
+  padding-left: 20px;
+  border-left: 2px solid var(--red);
+}
+
+/* section heading */
+.sh {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  margin-top: 36px;
+}
+.sh-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--red3);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+}
+.sh-line { flex:1; height:1px; background:var(--border); }
+
+/* concepts */
+.concepts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.cc {
+  background: var(--ink2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px 18px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .2s, background .2s;
+}
+.cc::after {
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg, var(--red), transparent);
+  opacity:0;
+  transition:opacity .2s;
+}
+.cc:hover { border-color: var(--border2); background: var(--ink3); }
+.cc:hover::after { opacity:1; }
+
+.cc-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--bone);
+  margin-bottom: 7px;
+  letter-spacing:.01em;
+}
+.cc-desc {
+  font-size: 12px;
+  color: var(--muted2);
+  line-height: 1.7;
+}
+
+/* applications */
+.apps-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.app-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 14px;
+  background: var(--ink2);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font-size: 12px;
+  color: var(--muted2);
+  line-height: 1.55;
+  transition: border-color .2s;
+}
+.app-item:hover { border-color: var(--border2); color: var(--bone); }
+.app-arrow { color:var(--red); flex-shrink:0; font-weight:700; }
+
+/* quiz pathway */
+.quiz-box {
+  background: linear-gradient(135deg, var(--ink2), var(--ink3));
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 18px 22px;
+  margin: 32px 0 0;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.quiz-icon {
+  width: 36px; height: 36px;
+  background: var(--red);
+  border-radius: 6px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px;
+  flex-shrink:0;
+}
+.quiz-content {}
+.quiz-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--red3);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:4px;
+}
+.quiz-title { font-size:13px; font-weight:700; color:var(--bone); margin-bottom:4px; }
+.quiz-desc { font-size:12px; color:var(--muted2); line-height:1.6; }
+
+/* terms */
+.terms-row {
+  display:flex; flex-wrap:wrap; gap:7px;
+  margin-bottom:4px;
+}
+.term {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 4px 11px;
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  color: var(--red3);
+  background: var(--red-dim);
+  cursor:default;
+  transition: background .2s;
+}
+.term:hover { background: rgba(192,0,26,.22); }
+
+/* exam tip */
+.exam-tip {
+  margin: 36px 0 0;
+  padding: 18px 22px 18px 64px;
+  background: var(--ink2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  position:relative;
+  font-size:13px;
+  color:var(--bone2);
+  line-height:1.75;
+}
+.et-num {
+  position:absolute;
+  left:18px;
+  top:16px;
+  font-family:var(--display);
+  font-size:28px;
+  color:var(--red);
+  line-height:1;
+}
+.et-label {
+  font-family:var(--mono);
+  font-size:9px;
+  color:var(--red3);
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  margin-bottom:5px;
+}
+
+/* ── FOOTER ── */
+.footer {
+  margin-top:80px;
+  padding: 36px 64px;
+  border-top:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+}
+.footer-brand {
+  font-family:var(--display);
+  font-size:22px;
+  color:var(--muted);
+  letter-spacing:.04em;
+}
+.footer-meta {
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--muted);
+  text-align:right;
+  line-height:1.8;
+}
+
+/* ── BACK TOP ── */
+#backTop {
+  position:fixed; bottom:28px; right:28px;
+  width:42px;height:42px;
+  background:var(--red);
+  border:none; border-radius:4px;
+  color:#fff; font-size:18px; cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0; transform:translateY(8px);
+  transition:all .3s;
+  box-shadow:0 4px 20px rgba(192,0,26,.5);
+  z-index:100;
+}
+#backTop.vis { opacity:1; transform:translateY(0); }
+#backTop:hover { background:var(--red2); }
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .hero { padding:40px 24px 40px; }
+  .module-body { padding:28px 24px 0; }
+  .chapter-div { padding:28px 24px; }
+  .curriculum-bar { grid-template-columns:1fr 1fr; padding:16px 24px; }
+  .pathway-note { margin:20px 24px; }
+  .concepts-grid, .apps-list { grid-template-columns:1fr; }
+  .hero-title { font-size:48px; }
+  .ch-ghost { display:none; }
+  .footer { padding:28px 24px; flex-direction:column; align-items:flex-start; }
+  .footer-meta { text-align:left; }
+}
+</style>
+</head>
+<body>
+
+<!-- STICKY TOP NAV -->
+<header class="top-nav" id="topNav">
+  <span class="nav-brand">EDGE 101</span>
+  <div class="nav-pills" id="navPills"></div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">NASSCOM FutureSkills Prime · Official Curriculum</div>
+    <h1 class="hero-title">Digital<br><span>Edge</span> 101</h1>
+    <p class="hero-desc">The complete study guide for all 10 modules of the Digital Edge 101 certification. Aligned to the official curriculum — covering AI, IoT, Cybersecurity, Blockchain, RPA, AR/VR, Cloud, 3D Printing, Web/Mobile, and Responsible AI.</p>
+    <div class="hero-chips">
+      <span class="chip red">30 Hours Total</span>
+      <span class="chip red">Microlearning Pathways</span>
+      <span class="chip red">Quiz-Validated</span>
+      <span class="chip">10 Modules</span>
+      <span class="chip">NCrF Credit Eligible</span>
+      <span class="chip">NSQF Level 4</span>
+    </div>
+  </div>
+</section>
+
+<!-- CURRICULUM STATS BAR -->
+<div class="curriculum-bar">
+  <div class="cb-item">
+    <div class="cb-val"><span>30</span> hrs</div>
+    <div class="cb-lbl">Total Duration</div>
+  </div>
+  <div class="cb-item">
+    <div class="cb-val"><span>60</span>×</div>
+    <div class="cb-lbl">30-Min Pathways</div>
+  </div>
+  <div class="cb-item">
+    <div class="cb-val"><span>10</span></div>
+    <div class="cb-lbl">Technology Modules</div>
+  </div>
+  <div class="cb-item">
+    <div class="cb-val"><span>60</span>+</div>
+    <div class="cb-lbl">Pathway Quizzes</div>
+  </div>
+</div>
+
+<!-- FORMAT NOTE -->
+<div class="pathway-note">
+  <span class="pn-icon">📋</span>
+  <span><strong>Format:</strong> Each module is delivered through short, focused <strong>30-minute Pathways</strong> (Microlearning). A quiz follows each pathway to confirm knowledge. Complete all 60 pathways across the 10 modules to earn the NCrF credit.</span>
+</div>
+
+<!-- MODULES INJECTED HERE -->
+<div id="moduleContainer"></div>
+
+<footer class="footer">
+  <div class="footer-brand">NASSCOM · Digital Edge 101</div>
+  <div class="footer-meta">
+    NASSCOM FutureSkills Prime · NSQF Level 4<br>
+    NCrF Credit Eligible · 30 Hours · 10 Modules
+  </div>
+</footer>
+
+<button id="backTop" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+const modules = [
+  {
+    id:"m1", num:"01", icon:"🤖",
+    title:"AI & Big Data Analytics",
+    short:"AI/BDA",
+    focus:"Focus on the principles of Artificial Intelligence, Machine Learning concepts, and leveraging Big Data for business insights.",
+    pathways:["Intro to AI & its History","Machine Learning Fundamentals","Deep Learning & Neural Networks","NLP & Computer Vision","Big Data: 5Vs & Architecture","Analytics Types & Business Insights"],
+    overview:"Artificial Intelligence enables machines to learn from experience and perform tasks that traditionally required human intelligence. Combined with Big Data Analytics — the process of processing and interpreting massive, diverse datasets — AI has become the most transformative technology of the 21st century. From predicting diseases to powering recommendation engines, AI and BDA are reshaping every industry globally and in India.",
+    concepts:[
+      {t:"Artificial Intelligence (AI)",d:"Simulation of human intelligence by machines. Narrow AI handles specific tasks (face recognition, spam detection). General AI (theoretical) would have broad human-like reasoning. Powered by data, algorithms, and compute."},
+      {t:"Machine Learning (ML)",d:"Subset of AI. Systems learn from data without being explicitly programmed. Supervised (labeled data → predict), Unsupervised (find hidden patterns), Reinforcement Learning (reward-based trial and error)."},
+      {t:"Deep Learning & Neural Networks",d:"Subset of ML with multi-layered neural networks inspired by the brain. Powers image recognition, voice assistants, language models. Requires large data and GPU compute."},
+      {t:"Natural Language Processing (NLP)",d:"Enables machines to understand and generate human language. Used in ChatGPT, Alexa, Google Translate, and sentiment analysis tools."},
+      {t:"Big Data — The 5 Vs",d:"Volume (scale: petabytes), Velocity (speed: real-time streams), Variety (formats: structured, unstructured, semi-structured), Veracity (data quality), Value (business insights extracted)."},
+      {t:"Four Analytics Types",d:"Descriptive (what happened — dashboards), Diagnostic (why it happened — root cause analysis), Predictive (what will happen — ML models), Prescriptive (what action to take — optimization algorithms)."}
+    ],
+    apps:[
+      "Healthcare: AI reads chest X-rays for TB detection — ICMR pilots across 100+ Indian hospitals",
+      "Finance: ML-based real-time fraud detection on 10 billion+ monthly UPI transactions (NPCI)",
+      "Retail: Amazon/Netflix recommendation engines — 35% of revenue from AI-powered suggestions",
+      "Agriculture: Plantix app uses image AI to detect 400+ crop diseases from smartphone photos",
+      "Smart Cities: Big Data optimizes Bengaluru traffic signals reducing commute times by 20%",
+      "HR: AI resume screening at Infosys, TCS, Wipro — processing millions of applications annually"
+    ],
+    terms:["Neural Network","Training Data","Supervised Learning","Overfitting","Hadoop","Apache Spark","Data Lake","ETL","Predictive Model","Computer Vision"],
+    quiz:"AI & Big Data Analytics Quiz",
+    quizDesc:"Tests your understanding of ML types, the 5 Vs of Big Data, analytics categories, and AI applications across industries. Expect scenario-based questions matching technology to use cases.",
+    exam:"Know the nested relationship: AI ⊃ ML ⊃ Deep Learning. All 5 Vs of Big Data are directly tested. Match each analytics type to a real example. India focus: NITI Aayog National AI Strategy — 5 focus sectors: healthcare, agriculture, education, smart cities, and smart mobility."
+  },
+  {
+    id:"m2", num:"02", icon:"📡",
+    title:"Internet of Things",
+    short:"IoT",
+    focus:"Understanding the network of connected devices, data flow, and building smart ecosystems.",
+    pathways:["IoT Fundamentals & Architecture","Sensors, Actuators & Connectivity","IoT Communication Protocols","Edge Computing & Fog Computing","IoT Security & Privacy","Smart Ecosystems: Cities, Health & Industry"],
+    overview:"IoT is the network of physical devices embedded with sensors, software, and connectivity that collect and exchange data without human interaction. IoT bridges the physical and digital worlds — turning factories, farms, hospitals, and homes into intelligent, data-generating ecosystems. India's Smart Cities Mission and Industrial IoT initiatives make this a critical domain for ECE engineers.",
+    concepts:[
+      {t:"IoT 4-Layer Architecture",d:"Perception Layer (sensors/actuators collect physical data) → Network Layer (WiFi, Bluetooth, 5G, LoRaWAN transmit data) → Processing Layer (edge/cloud analytics) → Application Layer (dashboards, automation, alerts)."},
+      {t:"Sensors & Actuators",d:"Sensors: detect physical quantities (temperature, motion, light, pressure, gas) and convert to digital signals. Actuators: receive digital commands and perform physical actions (opening a valve, adjusting a motor, triggering an alarm)."},
+      {t:"Communication Protocols",d:"MQTT: lightweight pub-sub protocol, ideal for constrained IoT devices. CoAP: RESTful protocol for low-power devices. Zigbee/Z-Wave: short-range mesh for smart homes. LoRaWAN: long range, ultra-low power for agriculture and smart metering."},
+      {t:"Edge vs Cloud Computing",d:"Edge: process data at/near the device — low latency, works offline, saves bandwidth. Fog Computing: intermediate processing at gateways. Cloud: centralized, large-scale analytics. Smart systems use hybrid edge+cloud architecture."},
+      {t:"IoT Security Challenges",d:"Weak default credentials, absence of encryption, unpatched firmware, physical device access. Mirai Botnet (2016) hijacked 600,000 IoT cameras for a massive DDoS attack. Security must be designed in, not bolted on."},
+      {t:"Digital Twin",d:"A virtual replica of a physical system (machine, building, city) updated in real-time with IoT sensor data. Enables simulation, predictive maintenance, and optimization without touching the physical asset."}
+    ],
+    apps:[
+      "Smart Home: Nest thermostats, Ring doorbells, smart locks — controlled remotely via mobile app",
+      "Industrial IIoT: Tata Steel uses vibration sensors for predictive maintenance — prevents costly breakdowns",
+      "Healthcare IoMT: Continuous glucose monitors (Abbott FreeStyle) and cardiac patches send real-time data to doctors",
+      "Smart Agriculture: Maharashtra farmers use soil moisture + weather IoT sensors to cut irrigation water by 30%",
+      "Smart Cities: Pune Smart City — IoT-based adaptive traffic signals and smart street lighting",
+      "Cold Chain: Vaccines tracked with GPS + temperature sensors from manufacturer to patient"
+    ],
+    terms:["Sensor","Actuator","MQTT","Gateway","LoRaWAN","Edge Node","Fog Computing","Digital Twin","M2M","Smart Grid"],
+    quiz:"Internet of Things Quiz",
+    quizDesc:"Covers IoT architecture layers, protocol selection for different scenarios, edge vs cloud computing, and IoT security threats. Scenario questions: which protocol to use for low-power wide-area applications?",
+    exam:"4-layer IoT architecture is the most tested concept — know all 4 layers and what happens at each. Protocol selection: LoRaWAN for long-range low-power (agriculture), MQTT for all IoT messaging, Zigbee for smart home mesh. Indian context: Smart Cities Mission covers 100 cities — IoT backbone."
+  },
+  {
+    id:"m3", num:"03", icon:"🔐",
+    title:"Cybersecurity",
+    short:"CyberSec",
+    focus:"Essential concepts of digital security, identifying threats, and fundamental protective strategies for individuals and businesses.",
+    pathways:["Cybersecurity Fundamentals & CIA Triad","Types of Threats & Attack Vectors","Authentication & Access Control","Encryption & Cryptography","Network Security Architecture","Compliance, Governance & India's IT Act"],
+    overview:"Cybersecurity protects systems, networks, and data from digital attacks and unauthorized access. With 1.4 billion+ internet users in India and ₹18 lakh crore in digital payments, cybersecurity is a national priority. India experienced 1.4 million+ cyberattacks in 2022. This module builds the foundational security mindset required in every technology role.",
+    concepts:[
+      {t:"The CIA Triad",d:"The three non-negotiable pillars: Confidentiality (only authorized access — encryption), Integrity (data is accurate and unaltered — hashing, checksums), Availability (systems accessible when needed — redundancy, DDoS mitigation, backups)."},
+      {t:"Major Threat Categories",d:"Malware: viruses, worms, trojans, ransomware (WannaCry locked NHS hospitals for $300 ransom). Phishing: fake emails/sites steal credentials — 91% of attacks start here. DDoS: flood systems with traffic. SQL Injection: manipulate database queries. Zero-Day: exploit unknown vulnerabilities before patches exist."},
+      {t:"Authentication & Zero Trust",d:"MFA (Multi-Factor Authentication): password + OTP + biometric. RBAC: access based on job role. Principle of Least Privilege: minimum access needed. Zero Trust Architecture: 'never trust, always verify' — no implicit trust inside or outside the network perimeter."},
+      {t:"Encryption Fundamentals",d:"Symmetric (AES-256): same key encrypts and decrypts — fast, for data at rest. Asymmetric (RSA): public key encrypts, private key decrypts — for secure key exchange. TLS/SSL secures all web communications (HTTPS). End-to-end encryption: only sender and recipient can read (WhatsApp, Signal)."},
+      {t:"Network Security Tools",d:"Firewalls: filter traffic by predefined rules. IDS (Intrusion Detection System): alerts on suspicious activity. IPS (Intrusion Prevention System): blocks threats in real-time. VPN: encrypts internet tunnel. WAF (Web Application Firewall): protects web apps from OWASP Top 10 attacks."},
+      {t:"India's Legal Framework",d:"IT Act 2000 + Amendment 2008: sections 43 (unauthorized access), 66 (computer crimes), 66C (identity theft), 66F (cyber terrorism). CERT-In: national cybersecurity response agency. 2022 CERT-In directive: mandatory 6-hour incident reporting for 20+ categories of cyber incidents."}
+    ],
+    apps:[
+      "Banking: UPI fraud detection using ML — NPCI blocks 99.9%+ of fraudulent transactions in real-time",
+      "Government: Aadhaar biometric database security — protecting 1.3 billion identity records",
+      "Healthcare: ABDM (Ayushman Bharat Digital Mission) — securing 500 million patient health records",
+      "Corporate: SOC (Security Operations Center) monitors enterprise threats 24/7 using SIEM platforms",
+      "E-commerce: PCI-DSS compliance for payment card data security on Flipkart, Amazon India",
+      "Personal: Two-factor authentication on Gmail protects 1.8 billion accounts from account takeover"
+    ],
+    terms:["CIA Triad","Phishing","Ransomware","Zero-Day","MFA","Firewall","IDS/IPS","TLS/SSL","SIEM","CERT-In"],
+    quiz:"Cybersecurity Quiz",
+    quizDesc:"Tests understanding of the CIA Triad, threat identification, authentication mechanisms, encryption types, and network security tools. Common format: 'which security control addresses this threat?' scenarios.",
+    exam:"CIA Triad is the absolute foundation — know all 3 with examples. Phishing is #1 attack vector — always in exam. Symmetric (AES) vs Asymmetric (RSA) — know when each is used. Indian law: IT Act 2000 section numbers for different cybercrime categories. CERT-In 6-hour reporting rule is recent and exam-relevant."
+  },
+  {
+    id:"m4", num:"04", icon:"⛓️",
+    title:"Blockchain",
+    short:"Blockchain",
+    focus:"Introduction to Decentralised Ledgers, Cryptography, and the Revolutionary Applications of distributed ledger technology.",
+    pathways:["Blockchain Fundamentals & Data Structure","Cryptography: Hashing & Digital Signatures","Consensus Mechanisms","Smart Contracts & Ethereum","Public vs Private vs Consortium Chains","Blockchain Applications: Finance, Supply Chain, Governance"],
+    overview:"Blockchain is a distributed, decentralized, immutable ledger recording transactions across a peer-to-peer network. Created as Bitcoin's foundation in 2008 by Satoshi Nakamoto, its core properties — transparency, immutability, trustlessness, and decentralization — have made it transformative far beyond cryptocurrency, revolutionizing supply chains, digital identity, land records, and financial inclusion.",
+    concepts:[
+      {t:"Blockchain Data Structure",d:"Transactions grouped into Blocks. Each block contains: transaction data, timestamp, Merkle tree root (summary of all transactions), and hash of previous block — creating the chain. Any tampering changes the block hash, breaking the chain and alerting all nodes immediately."},
+      {t:"Cryptographic Foundations",d:"SHA-256 Hash: one-way function converting any data to a fixed 64-char string. Deterministic and collision-resistant. Digital Signatures: prove ownership using private key (sign) + public key (verify). Merkle Trees: efficiently summarize 1000s of transactions into one root hash per block."},
+      {t:"Consensus Mechanisms",d:"Proof of Work (PoW): miners race to solve SHA-256 puzzles — energy intensive but battle-tested (Bitcoin). Proof of Stake (PoS): validators stake crypto — 99.9% less energy (Ethereum post-Merge 2022). Delegated PoS, Proof of Authority for enterprise/private blockchains."},
+      {t:"Smart Contracts",d:"Self-executing code deployed on blockchain. Runs automatically when predefined conditions are met — zero intermediaries. Written in Solidity (Ethereum). Used in DeFi lending, insurance payouts, supply chain milestone payments, and automated governance voting."},
+      {t:"Blockchain Types",d:"Public (permissionless): open to all, fully decentralized — Bitcoin, Ethereum. Private (permissioned): restricted access, faster, for enterprise — Hyperledger Fabric. Consortium: controlled by group of orgs — R3 Corda (banking), TradeLens (shipping, Maersk+IBM)."},
+      {t:"Web3 & DeFi",d:"Web3: decentralized internet where users own data and assets, not corporations. DeFi (Decentralized Finance): financial services without banks — lending, borrowing, trading via smart contracts. NFTs: prove digital ownership on blockchain. DAOs: community-governed organizations."}
+    ],
+    apps:[
+      "Land Records: Andhra Pradesh & Telangana use Hyperledger to prevent land title fraud — immutable ownership",
+      "Supply Chain: Walmart traces contaminated food to source in 2.2 seconds (vs 7 days) using blockchain",
+      "Digital Currency: RBI's Digital Rupee (CBDC) pilot — 13 banks, cross-border payment use cases",
+      "Healthcare: Apollo Hospitals uses blockchain for secure, interoperable patient record sharing",
+      "Voting: Telangana blockchain voting pilot — tamper-proof, transparent electoral records",
+      "Trade Finance: ICICI Bank uses blockchain for Letter of Credit — reduced processing from 7 days to 4 hours"
+    ],
+    terms:["Hash","Merkle Tree","Smart Contract","PoW","PoS","Hyperledger","DeFi","NFT","CBDC","Solidity"],
+    quiz:"Blockchain Quiz",
+    quizDesc:"Covers blockchain structure, consensus mechanisms, smart contract logic, and blockchain types. Expect questions on which blockchain type to use for a given scenario, and how consensus ensures trust.",
+    exam:"Blockchain is NOT anonymous — it is pseudonymous (addresses public, identities private). Public vs Private vs Consortium — know examples for each. Smart contracts run on Ethereum (not Bitcoin). India: Andhra Pradesh land records, Digital Rupee CBDC, IndiaChain proposal by NITI Aayog."
+  },
+  {
+    id:"m5", num:"05", icon:"⚙️",
+    title:"Robotic Process Automation",
+    short:"RPA",
+    focus:"Learning how to utilise software bots to automate routine, high-volume tasks for enhanced operational efficiency.",
+    pathways:["RPA Fundamentals & What Bots Can Do","RPA Architecture: Studio, Bot & Orchestrator","Attended vs Unattended Automation","Intelligent Automation: RPA + AI","Leading RPA Platforms","RPA Implementation & ROI"],
+    overview:"RPA uses software robots to automate repetitive, rule-based digital tasks by interacting with applications through the UI — exactly as a human would, but 10-15x faster, with near-zero errors, and continuously. RPA delivers 25-50% cost reduction and 6-9 month ROI across banking, insurance, healthcare, and government — making it one of the fastest-growing enterprise software categories.",
+    concepts:[
+      {t:"What RPA Automates",d:"Rule-based, high-volume, repetitive, structured-data tasks: data entry across systems, form filling, invoice processing, copy-paste between applications, report generation, email parsing, compliance data collection, and reconciliation."},
+      {t:"RPA vs Intelligent Automation",d:"Basic RPA: rigid rules, only handles structured data, cannot make decisions. Intelligent Automation (IA) = RPA + AI/ML + NLP + OCR: reads unstructured documents (emails, invoices, contracts), makes decisions, handles exceptions. Also called Hyperautomation or Cognitive RPA."},
+      {t:"RPA Architecture (Three Components)",d:"Bot Creator: drag-and-drop workflow design studio (UiPath Studio, AA Developer). Bot Runner: executes automation on virtual or physical machines. Orchestrator/Control Room: centrally manages, monitors, schedules, logs, and controls all bots — the command center."},
+      {t:"Attended vs Unattended Bots",d:"Attended: runs on employee's machine, triggered manually to assist in real-time (call center: bot pulls customer data while agent talks). Unattended: runs 24/7 autonomously on server, no human needed (overnight batch invoice processing for 10,000 invoices)."},
+      {t:"RPA Business Value",d:"Speed: 10-15x faster than human processing. Accuracy: near-zero vs 4% human error rate. Cost: 25-50% operational cost reduction. Non-invasive: no changes to existing legacy systems — bots work on the UI layer. Scalable: spin up additional bots instantly for volume spikes."},
+      {t:"Leading Platforms",d:"UiPath: global market leader, strongest AI integration, most widely used in India (Wipro, Infosys, TCS). Automation Anywhere (A360): cloud-native, strong enterprise. Blue Prism: enterprise-grade, financial services. Microsoft Power Automate: deep Microsoft 365 integration."}
+    ],
+    apps:[
+      "Banking: SBI uses RPA for KYC document verification — reduced processing from 3 days to 4 hours",
+      "Insurance: LIC automates claims processing — from 10 days manual to 2 hours via attended bots",
+      "Healthcare: Apollo automates patient data entry, billing, and bed availability tracking across 70+ hospitals",
+      "HR: TCS automates onboarding workflows for 600,000+ employees — offer letters, access provisioning",
+      "Telecom: Airtel uses RPA for fault resolution ticket routing and customer data synchronization",
+      "Government: Ministry of Finance uses bots for pension calculation and disbursement processing"
+    ],
+    terms:["Bot","Orchestrator","Workflow","UiPath","Automation Anywhere","Blue Prism","OCR","Hyperautomation","Screen Scraping","Cognitive RPA"],
+    quiz:"RPA Quiz",
+    quizDesc:"Tests knowledge of RPA architecture components, attended vs unattended scenarios, what tasks RPA can and cannot automate, and ROI concepts. Scenario-based: 'which type of bot should be used for this process?'",
+    exam:"RPA does NOT require changes to existing IT systems — this is a major exam point. Key limitation: RPA alone cannot handle unstructured data (needs AI). Know all 3 architecture components: Creator, Runner, Orchestrator. India: NASSCOM reports India has 40%+ of global RPA implementations via IT services firms."
+  },
+  {
+    id:"m6", num:"06", icon:"🥽",
+    title:"Augmented & Virtual Reality",
+    short:"AR/VR",
+    focus:"Exploring immersive technologies and their practical use in fields like training, entertainment, and remote collaboration.",
+    pathways:["VR Fundamentals & Hardware","AR Fundamentals & Mobile AR","Mixed Reality & Spatial Computing","Enabling Technologies: SLAM, Eye-Tracking, Haptics","The Metaverse & XR Ecosystem","AR/VR in Industry, Training & Education"],
+    overview:"AR and VR are immersive technologies that alter or create digital experiences. VR replaces reality with a fully digital environment. AR overlays digital content onto the real world. Together under the Extended Reality (XR) umbrella with Mixed Reality (MR), these technologies are transforming training, healthcare, education, retail, and collaboration — and form the foundation of the emerging Metaverse.",
+    concepts:[
+      {t:"Virtual Reality (VR)",d:"Fully immersive 3D digital environment replacing the real world. Requires Head-Mounted Displays (HMDs) with built-in screens and motion tracking. Devices: Meta Quest 3, PlayStation VR2, HTC Vive. 6DoF tracking enables movement in all directions. Used for gaming, military training, therapy (PTSD, phobia treatment), and surgical simulation."},
+      {t:"Augmented Reality (AR)",d:"Digital content (3D models, text, animations) overlaid onto real-world camera view in real-time. Delivered via smartphones (ARKit for iOS, ARCore for Android) or AR glasses. Examples: Pokémon GO, IKEA Place app, Snapchat filters, Google Lens, Google Maps Live View AR navigation."},
+      {t:"Mixed Reality (MR) & XR",d:"MR: digital objects coexist and interact with real world in real-time (Microsoft HoloLens 2, Apple Vision Pro). XR (Extended Reality): umbrella term covering VR + AR + MR — the full Reality-Virtuality Continuum from fully physical to fully virtual."},
+      {t:"Enabling Technologies",d:"SLAM (Simultaneous Localization and Mapping): device understands its 3D position in space in real-time — foundation of all AR. Eye-tracking: gaze interaction and foveated rendering (Meta Quest Pro, Apple Vision Pro). Haptic feedback: vibration motors and force-feedback simulate touch in VR."},
+      {t:"The Metaverse",d:"Persistent, shared 3D virtual world combining VR/AR + blockchain + AI + 5G. Platforms: Meta Horizon Worlds, Decentraland, Microsoft Mesh (enterprise virtual meetings), Roblox. India's metaverse market projected at $79 billion by 2032. Use cases: virtual offices, digital commerce, immersive learning."},
+      {t:"AR/VR Development Stack",d:"Game Engines: Unity 3D (most common for VR/AR), Unreal Engine (photorealistic). AR SDKs: ARKit (iOS), ARCore (Android), Vuforia (enterprise AR). WebXR: AR/VR directly in browsers. 3D Assets: Blender, Maya. Haptic SDKs: bHaptics, SenseGlove."}
+    ],
+    apps:[
+      "Military: US Army IVAS system — Microsoft HoloLens for combat situational awareness and training",
+      "Medical Training: Osso VR surgical simulation — 230% better performance vs traditional training methods",
+      "Education: BYJU'S uses AR to visualize 3D biology and physics concepts in lessons",
+      "Real Estate: Magicbricks and NoBroker offer AR floor plan walkthroughs before construction completes",
+      "Retail: Lenskart AR try-on for glasses; Asian Paints ColourNext visualizes room colors in real-time",
+      "Manufacturing: Boeing uses AR maintenance manuals — overlaid wiring diagrams reduce assembly errors by 25%"
+    ],
+    terms:["HMD","6DoF","SLAM","ARKit","ARCore","Haptic","Metaverse","XR","Spatial Computing","Foveated Rendering"],
+    quiz:"AR/VR Quiz",
+    quizDesc:"Covers distinctions between VR/AR/MR, enabling technologies, 6DoF, and industry applications. Common question format: identify which XR technology is being described, or match technology to use case.",
+    exam:"Core distinction: VR = replaces reality; AR = overlays reality; MR = interactive blend. 6DoF = freedom to move in 3 rotational + 3 translational axes (full physical movement in virtual space). SLAM is the technology enabling AR positional awareness. India metaverse market size (₹6.5 lakh crore by 2032) may appear in application questions."
+  },
+  {
+    id:"m7", num:"07", icon:"☁️",
+    title:"Cloud Computing",
+    short:"Cloud",
+    focus:"Core concepts of cloud services (IaaS, PaaS, SaaS), deployment models, and scalable infrastructure management.",
+    pathways:["Cloud Computing Fundamentals & NIST Definition","IaaS, PaaS, SaaS Service Models","Deployment Models: Public, Private, Hybrid","Virtualization & Containerization","Cloud Security & Shared Responsibility","Cloud Providers & India's Cloud Ecosystem"],
+    overview:"Cloud Computing delivers computing services — servers, storage, databases, networking, software — over the internet with pay-as-you-go pricing. It eliminates capital expenditure on hardware, enables global scalability in minutes, and powers every major digital service. India's cloud market is growing at 23% annually, driven by government digitization, startup growth, and enterprise modernization.",
+    concepts:[
+      {t:"IaaS / PaaS / SaaS",d:"IaaS (Infrastructure): raw compute, storage, networking — you manage OS and apps (AWS EC2, Azure VMs, Google Compute Engine). PaaS (Platform): development environment + runtime — you manage only apps (Heroku, Google App Engine). SaaS (Software): complete ready-to-use apps (Gmail, Salesforce, Zoom, Microsoft 365)."},
+      {t:"Deployment Models",d:"Public Cloud: shared infrastructure, internet-accessible, owned by provider (AWS, Azure, GCP) — most cost-effective. Private Cloud: dedicated to one org, on-premise or hosted — high security. Hybrid Cloud: sensitive workloads on private + scalable on public. Multi-Cloud: 2+ providers to avoid vendor lock-in."},
+      {t:"NIST 5 Essential Characteristics",d:"On-demand self-service (provision without human interaction), Broad network access (any device via internet), Resource pooling (multi-tenant shared infrastructure), Rapid elasticity (scale instantly up or down), Measured service (pay only for what you consume)."},
+      {t:"Virtualization & Containers",d:"Virtualization: Hypervisors (VMware ESXi, KVM, Hyper-V) divide one physical server into multiple isolated VMs. Docker: packages app + all dependencies into lightweight portable container. Kubernetes (K8s): orchestrates thousands of containers across clusters — industry standard for cloud-native apps."},
+      {t:"Serverless & Microservices",d:"Serverless/FaaS: run functions without managing servers — AWS Lambda, Azure Functions, triggered by events, billed per millisecond of execution. Microservices: application decomposed into independent, loosely coupled services communicating via APIs — enables faster development and scaling."},
+      {t:"Cloud Security & Shared Responsibility",d:"Provider secures: physical infrastructure, network, hypervisor. Customer secures: data, applications, access control, encryption. IAM (Identity & Access Management): control who accesses what. VPC (Virtual Private Cloud): isolated network. Encryption at rest and in transit is mandatory best practice."}
+    ],
+    apps:[
+      "E-commerce: Flipkart autoscales to 10x capacity on AWS during Big Billion Days — zero downtime",
+      "Government: GSTN (GST Network) processes 3 billion+ invoices annually on cloud; DigiLocker on NIC Cloud",
+      "Streaming: JioCinema streamed IPL 2023 to 32 million concurrent viewers using Google Cloud — world record",
+      "Healthcare: ABDM (Ayushman Bharat Digital Mission) stores and links 500 million health records on cloud",
+      "Startups: Zomato, Swiggy, CRED — cloud-native, scaled to millions of users without owning a single server",
+      "Education: DIKSHA platform (2 crore+ students), SWAYAM MOOCs — national education on cloud"
+    ],
+    terms:["IaaS","PaaS","SaaS","Hypervisor","Docker","Kubernetes","Autoscaling","CDN","IAM","Serverless"],
+    quiz:"Cloud Computing Quiz",
+    quizDesc:"Tests IaaS/PaaS/SaaS distinctions with real examples, deployment model trade-offs, and cloud security concepts. Most common: identify service model from description, and which deployment model fits a given scenario.",
+    exam:"IaaS/PaaS/SaaS is the most tested concept — memorize a real example for each. AWS ~32% global cloud market share (leader), Azure ~23%, GCP ~12%. India government: MeitY-empanelled cloud providers for government workloads include AWS, Azure, GCP, NIC Cloud, and others. Serverless and Kubernetes are emerging exam topics."
+  },
+  {
+    id:"m8", num:"08", icon:"🖨️",
+    title:"3D Printing & Modeling",
+    short:"3D Print",
+    focus:"Fundamentals of additive manufacturing, design processes, and rapid prototyping applications.",
+    pathways:["Additive vs Subtractive Manufacturing","FDM Technology & Materials","SLA, SLS & Advanced Printing Technologies","CAD Software & the 3D Modeling Workflow","Design for Additive Manufacturing (DfAM)","Industry Applications & Rapid Prototyping"],
+    overview:"3D Printing (Additive Manufacturing) creates three-dimensional objects layer by layer from a digital model — adding material only where needed, unlike subtractive manufacturing (CNC milling, cutting). This enables rapid prototyping, mass customization, and geometric complexity impossible with traditional methods. 3D printing is transforming aerospace, medicine, construction, and education at national scale.",
+    concepts:[
+      {t:"How 3D Printing Works",d:"1. Create 3D model in CAD software (Fusion 360, SolidWorks, Blender). 2. Export as STL/OBJ/3MF file. 3. Slice using software (Cura, PrusaSlicer) — converts 3D model into layer-by-layer G-code instructions. 4. Print layer by layer (25–300 micron layer height). 5. Post-process: remove supports, sand, paint, or heat-treat."},
+      {t:"FDM — Fused Deposition Modeling",d:"Most affordable and common technology. Heats thermoplastic filament (PLA, ABS, PETG, Nylon, TPU) to melting point, extrudes through nozzle, deposits layer by layer on a build plate. Resolution: 50-300 microns. Popular printers: Bambu Lab X1, Prusa i3 MK4, Creality Ender 3. Best for: functional prototypes, mechanical parts."},
+      {t:"SLA — Stereolithography",d:"UV laser or masked LCD cures liquid photopolymer resin layer by layer. Resolution: 25-50 microns — exceptional detail. Best for: dental models, jewelry, miniatures, medical devices. Post-processing requires UV wash + cure station. Formlabs Form 4, Elegoo Saturn are popular printers."},
+      {t:"SLS & Metal Printing",d:"SLS (Selective Laser Sintering): CO₂ laser sinters nylon/polyamide powder — no support structures needed, strong isotropic parts. DMLS/SLM: fiber laser melts metal powder (titanium, Inconel, 316L stainless steel) layer by layer — aerospace, medical implants. Most expensive but unmatched strength and complexity."},
+      {t:"CAD & 3D Modeling Workflow",d:"Parametric CAD (Fusion 360, SolidWorks, FreeCAD): dimension-driven engineering models, precise tolerances. Mesh/Sculpting (Blender, ZBrush): organic shapes, artistic models. 3D Scanning (structured light, photogrammetry): digitize real objects. Generative Design: AI optimizes geometry for minimum weight + maximum strength automatically."},
+      {t:"Design for Additive Manufacturing (DfAM)",d:"Design principles optimized for 3D printing: minimize overhangs (>45° needs support), use lattice/honeycomb infill (30-40% weight saving), exploit layer orientation for strength, consolidate multiple assembled parts into single print, design internal channels impossible to machine."}
+    ],
+    apps:[
+      "Aerospace: GE prints LEAP jet engine fuel nozzles from cobalt-chrome alloy — 25% lighter, 5x more durable",
+      "Medical: Custom titanium hip implants matched to patient CT scan; 15 million 3D printed hearing aids annually",
+      "Defense: DRDO uses metal 3D printing for missile fins, UAV components, and rapid field spares",
+      "Automotive: Tata Motors and Mahindra use 3D printing for concept car prototyping and tooling fixtures",
+      "Construction: 3D printed post office in Bengaluru (2023, COBOD gantry printer) — India's first government building",
+      "Education: Atal Tinkering Labs in 10,000+ schools provide FDM printers for student project manufacturing"
+    ],
+    terms:["FDM","SLA","SLS","DMLS","CAD","STL File","G-Code","Slicer","Infill","Bioprinting"],
+    quiz:"3D Printing & Modeling Quiz",
+    quizDesc:"Covers differences between printing technologies, design workflow steps, material selection, and industry applications. Typical question: identify the correct technology for a given application or material requirement.",
+    exam:"FDM (affordable/functional), SLA (high detail), SLS (strong/no supports), DMLS (metal) — know which to use when. Additive (add material) vs Subtractive (remove material) manufacturing is fundamental. Bioprinting (living cells + bioink hydrogel for tissue engineering) is a hot topic — expect at least one question."
+  },
+  {
+    id:"m9", num:"09", icon:"🌐",
+    title:"Web, Mobile & Digital Marketing",
+    short:"Web/Mobile",
+    focus:"Basic concepts of digital presence, web development frameworks, and foundational Digital Marketing strategies.",
+    pathways:["Web Development Fundamentals: HTML, CSS, JS","Frontend Frameworks & Backend Stack","Mobile Development: Native vs Cross-Platform","APIs, Web Services & Integration","SEO, SEM & Digital Advertising","Social Media, Content Marketing & Analytics"],
+    overview:"Web and Mobile Development create digital applications and platforms. Digital Marketing builds strategies to reach and engage customers through digital channels. Together, these are the engine of India's $700 billion digital economy — from 750 million smartphone users to the ₹18 lakh crore UPI ecosystem. India has the world's 2nd largest developer community, making this module directly career-relevant.",
+    concepts:[
+      {t:"Web Development Stack",d:"Front-end (client-side): HTML (structure/content), CSS (styling/layout), JavaScript (interactivity/logic). Frameworks: React.js (Meta, component-based), Angular (Google, full framework), Vue.js (progressive). Back-end (server-side): Node.js, Python/Django, PHP, Java/Spring Boot. Databases: MySQL (relational), MongoDB (document), PostgreSQL."},
+      {t:"Mobile Development",d:"Native: Swift/Obj-C (iOS), Kotlin/Java (Android) — best performance, full platform features, separate codebases. Cross-platform: Flutter (Google/Dart) and React Native (Meta/JS) — one codebase for both platforms, 70-80% code reuse, faster development. PWA (Progressive Web App): web app with offline capability and push notifications, no app store needed."},
+      {t:"APIs & Web Services",d:"REST API: uses HTTP methods (GET/POST/PUT/DELETE), JSON data format — universal standard. GraphQL: client specifies exact data needed, reduces over-fetching — Facebook invented. WebSockets: full-duplex real-time communication (chat apps, live sports scores). Webhooks: event-triggered HTTP callbacks (payment confirmation notification)."},
+      {t:"SEO vs SEM",d:"SEO (Search Engine Optimization): improve organic (free) search ranking via content quality, page speed, mobile-friendliness, backlinks, technical optimization. Results: slow but sustainable. SEM/PPC (Paid Search): Google Ads, bidding on keywords for top placement. Cost Per Click (CPC). Results: immediate but requires budget."},
+      {t:"Digital Marketing Channels & Metrics",d:"Social Media Marketing: LinkedIn (B2B), Instagram/YouTube (brand awareness), Twitter/X (real-time). Email Marketing: highest ROI ($42 per $1 spent). Influencer Marketing: 5-11x better ROI vs traditional. Key Metrics: CTR (Click-Through Rate), Conversion Rate, CPC, CAC (Customer Acquisition Cost), ROAS, Bounce Rate."},
+      {t:"UX & Conversion Optimization",d:"UX (User Experience): designing for ease, accessibility, and delight. Mobile-First Design: 70%+ web traffic is mobile — design for small screens first. A/B Testing: compare two versions of a page to improve conversion. CRO (Conversion Rate Optimization): systematic improvement of user actions (purchase, signup)."}
+    ],
+    apps:[
+      "FinTech: PhonePe processes 50% of India's UPI — mobile app built with Flutter by Google",
+      "E-commerce: Meesho — social commerce platform, 120 million+ active users, mobile-first Flutter app",
+      "EdTech: BYJU'S — 150 million registered users, AI-personalized learning on mobile",
+      "Food Delivery: Swiggy and Zomato — React Native apps with real-time GPS tracking and payments",
+      "Government: UMANG app — 1,200+ government services (EPFO, DigiLocker, Aadhaar) in one mobile platform",
+      "Content: Moj and Josh (ShareChat) — short video platforms built for Bharat's 500M non-English mobile users"
+    ],
+    terms:["HTML/CSS/JS","React","Flutter","REST API","GraphQL","SEO","CTR","CPC","ROAS","A/B Testing"],
+    quiz:"Web, Mobile & Digital Marketing Quiz",
+    quizDesc:"Tests front-end vs back-end distinctions, native vs cross-platform trade-offs, REST API concepts, and digital marketing metrics. Metric calculation questions common: given clicks and impressions, calculate CTR.",
+    exam:"Front-end = what users see (HTML/CSS/JS). Back-end = server logic (Node, Django, etc.). CTR = (Clicks ÷ Impressions) × 100. Conversion Rate = (Conversions ÷ Visitors) × 100. Flutter is built by Google using Dart language. React Native uses JavaScript. India: 2nd largest developer community globally after USA."
+  },
+  {
+    id:"m10", num:"10", icon:"⚖️",
+    title:"Responsible AI",
+    short:"Resp. AI",
+    focus:"Critical understanding of the ethical considerations, fairness, transparency, and governance needed for developing and deploying AI systems.",
+    pathways:["AI Bias: Types, Causes & Real-World Failures","Explainability & Transparency in AI (XAI)","Privacy in AI: Federated Learning & Differential Privacy","AI Governance: EU AI Act & Global Frameworks","India's AI Policy: NITI Aayog & IndiaAI Mission","AI's Societal Impact: Jobs, Deepfakes & Environment"],
+    overview:"Responsible AI is the ethical development, deployment, and governance of AI systems. As AI impacts high-stakes decisions — healthcare diagnoses, loan approvals, parole decisions, hiring — ensuring fairness, transparency, accountability, and privacy is critical. With India's IndiaAI Mission (₹10,372 crore) and the global EU AI Act (2024), this is the fastest-evolving policy domain in technology.",
+    concepts:[
+      {t:"AI Bias & Fairness",d:"AI perpetuates and amplifies biases present in training data. Types: Historical bias (data reflects past inequalities — e.g., male-dominated hiring data), Representation bias (minority groups underrepresented — facial recognition fails on darker skin), Measurement bias (inaccurate proxy variables used). Real failure: Amazon's AI hiring tool discriminated against women — scrapped 2018."},
+      {t:"Explainability & XAI",d:"XAI (Explainable AI): AI systems whose decisions can be understood and traced by humans. Black-box models (deep neural networks) vs interpretable models (decision trees, linear regression). Tools: LIME (explains individual predictions locally), SHAP (quantifies each feature's contribution to prediction). Critical for medical AI, credit scoring, and legal decisions."},
+      {t:"Privacy in AI Systems",d:"AI training requires large datasets, raising serious privacy concerns. Federated Learning: model trains on distributed data without data ever leaving the device — used by Google (Gboard keyboard). Differential Privacy: add carefully calibrated mathematical noise to datasets — Apple uses for usage statistics. Data Minimization: collect only what is strictly necessary."},
+      {t:"EU AI Act (2024)",d:"World's first comprehensive AI law. Risk-based approach: Unacceptable Risk (banned) — social credit scoring, real-time biometric mass surveillance in public. High Risk (strict requirements) — AI in healthcare, hiring, judiciary, critical infrastructure. Limited Risk (disclosure) — chatbots must identify as AI. Minimal Risk (voluntary) — spam filters, video games."},
+      {t:"India's AI Policy",d:"NITI Aayog Responsible AI for All (2021): 7 principles — Safety & Reliability, Equality, Inclusivity, Privacy & Security, Transparency, Accountability, Protection & Reinforcement of Positive Human Values. IndiaAI Mission (2024): ₹10,372 crore for sovereign AI compute (10,000+ GPU cluster), national datasets, AI startups, and safe & trusted AI framework."},
+      {t:"Societal & Environmental Impact",d:"Jobs: WEF estimates 85 million roles displaced but 97 million new roles created by 2025 — net positive but transition disruption is real. Deepfakes: AI-generated fake video/audio — electoral misinformation, financial fraud, non-consensual imagery. Environment: training GPT-4 consumed ~50 GWh electricity. Green AI advocates for efficient architectures and renewable-powered data centers."}
+    ],
+    apps:[
+      "Hiring: LinkedIn and Naukri audit AI screening tools quarterly for gender and caste bias in Indian context",
+      "Criminal Justice: COMPAS algorithm (US) showed racial bias in parole recommendations — landmark bias case study",
+      "Healthcare: FDA requires explainability reports for AI medical devices — doctors must understand model reasoning",
+      "Finance: RBI mandates that banks explain AI-based credit rejection reasons clearly to customers",
+      "Facial Recognition: Delhi Police AI face recognition pilot — civil society raised false-positive bias concerns",
+      "Content Moderation: Meta and YouTube AI moderation — challenged for inconsistency across regional languages"
+    ],
+    terms:["XAI","Bias","Fairness","Federated Learning","Differential Privacy","EU AI Act","SHAP","LIME","Deepfake","AI Alignment"],
+    quiz:"Responsible AI Quiz",
+    quizDesc:"Tests AI bias types, explainability tools, privacy-preserving techniques, EU AI Act risk tiers, and India's AI policy framework. Scenario questions: identify the type of bias in a given situation, or classify an AI system under EU AI Act risk tiers.",
+    exam:"4 pillars of Responsible AI: Fairness, Transparency, Accountability, Privacy. EU AI Act 4 risk tiers — know examples for each, especially Unacceptable Risk (banned) vs High Risk (regulated). India: IndiaAI Mission ₹10,372 crore (2024) is the biggest recent policy development. Federated Learning = privacy-preserving ML — know how it works and where it's used."
+  }
+];
+
+// Build nav pills
+const pillsEl = document.getElementById('navPills');
+modules.forEach(m => {
+  const a = document.createElement('a');
+  a.className = 'nav-pill';
+  a.href = '#' + m.id;
+  a.textContent = m.num + ' · ' + m.short;
+  a.setAttribute('data-id', m.id);
+  pillsEl.appendChild(a);
+});
+
+// Build module HTML
+const container = document.getElementById('moduleContainer');
+modules.forEach((m, i) => {
+  // Pathways list
+  const pwHTML = m.pathways.map((p, pi) =>
+    `<span class="ch-pathway">${String(pi+1).padStart(2,'0')} · ${p}</span>`
+  ).join('');
+
+  // Concepts
+  const conHTML = m.concepts.map(c =>
+    `<div class="cc"><div class="cc-title">${c.t}</div><div class="cc-desc">${c.d}</div></div>`
+  ).join('');
+
+  // Apps
+  const appHTML = m.apps.map(a =>
+    `<div class="app-item"><span class="app-arrow">→</span><span>${a}</span></div>`
+  ).join('');
+
+  // Terms
+  const termHTML = m.terms.map(t => `<span class="term">${t}</span>`).join('');
+
+  const section = document.createElement('div');
+  section.id = m.id;
+  section.innerHTML = `
+    <div class="chapter-div">
+      <div class="ch-ghost">${m.num}</div>
+      <div class="ch-tag">Module ${m.num} of 10 · ${m.icon} ${m.short} · ${m.pathways.length} Pathways × 30 min</div>
+      <h2 class="ch-title">${m.title}</h2>
+      <p class="ch-focus">${m.focus}</p>
+      <div class="ch-pathways">${pwHTML}</div>
+    </div>
+
+    <div class="module-body">
+      <div class="overview">${m.overview}</div>
+
+      <div class="sh"><span class="sh-label">Core Concepts</span><div class="sh-line"></div></div>
+      <div class="concepts-grid">${conHTML}</div>
+
+      <div class="sh"><span class="sh-label">Real-World Applications</span><div class="sh-line"></div></div>
+      <div class="apps-list">${appHTML}</div>
+
+      <div class="sh"><span class="sh-label">Key Terms</span><div class="sh-line"></div></div>
+      <div class="terms-row">${termHTML}</div>
+
+      <div class="sh"><span class="sh-label">Assessment</span><div class="sh-line"></div></div>
+      <div class="quiz-box">
+        <div class="quiz-icon">📝</div>
+        <div class="quiz-content">
+          <div class="quiz-label">Pathway Quiz — ${m.num}</div>
+          <div class="quiz-title">${m.quiz}</div>
+          <div class="quiz-desc">${m.quizDesc}</div>
+        </div>
+      </div>
+
+      <div class="exam-tip">
+        <div class="et-num">!</div>
+        <div class="et-label">NASSCOM Exam Tip</div>
+        ${m.exam}
+      </div>
+    </div>`;
+  container.appendChild(section);
+});
+
+// Active nav pill on scroll
+const sections = modules.map(m => document.getElementById(m.id));
+const pills = document.querySelectorAll('.nav-pill');
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      pills.forEach(p => p.classList.remove('active'));
+      const active = document.querySelector(`.nav-pill[data-id="${e.target.id}"]`);
+      if (active) {
+        active.classList.add('active');
+        active.scrollIntoView({ inline: 'nearest', behavior: 'smooth' });
+      }
+    }
+  });
+}, { threshold: 0.15 });
+
+sections.forEach(s => { if(s) obs.observe(s); });
+
+// Back to top
+window.addEventListener('scroll', () => {
+  document.getElementById('backTop').classList.toggle('vis', scrollY > 500);
+});
+</script>
+</body>
+</html>
