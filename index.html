@@ -1,977 +1,1316 @@
+cat > /mnt/user-data/outputs/edge101_deep_guide.html << 'ENDOFFILE'
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NASSCOM Digital Edge 101 — Official Study Guide</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>NASSCOM Digital Edge 101 — Deep Study Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-/* ── TOKENS ── */
 :root {
-  --ink:       #0E0E10;
-  --ink2:      #18181C;
-  --ink3:      #242428;
-  --red:       #C0001A;
-  --red2:      #E5001F;
-  --red3:      #FF1A36;
-  --red-dim:   rgba(192,0,26,0.12);
-  --red-mid:   rgba(192,0,26,0.35);
-  --bone:      #F5F0E8;
-  --bone2:     #E8E2D8;
-  --muted:     #6B6870;
-  --muted2:    #9B9AA0;
-  --border:    rgba(255,255,255,0.07);
-  --border2:   rgba(192,0,26,0.3);
-
-  --display:  'Bebas Neue', sans-serif;
-  --serif:    'Lora', Georgia, serif;
-  --mono:     'IBM Plex Mono', monospace;
-  --body:     'Manrope', sans-serif;
+  --red: #C8001E;
+  --red-dark: #9A0017;
+  --red-light: #FF2040;
+  --red-pale: #FFF0F2;
+  --red-border: rgba(200,0,30,0.2);
+  --page: #FAFAF8;
+  --ink: #1A1A1A;
+  --ink2: #2D2D2D;
+  --ink3: #444444;
+  --mid: #787878;
+  --light: #E8E8E4;
+  --lighter: #F2F2EF;
+  --white: #FFFFFF;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+  --serif: 'Merriweather', Georgia, serif;
+  --sans: 'Inter', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --max: 780px;
 }
 
-*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
-html { scroll-behavior:smooth; font-size:16px; }
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
 
 body {
-  background: var(--ink);
-  color: var(--bone);
-  font-family: var(--body);
-  line-height: 1.6;
-  overflow-x: hidden;
+  background: #E8E4DE;
+  font-family: var(--serif);
+  color: var(--ink);
+  line-height: 1.85;
 }
 
-/* ── STICKY TOP NAV ── */
-.top-nav {
-  position: sticky;
-  top: 0;
-  z-index: 200;
-  background: rgba(14,14,16,0.95);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  gap: 0;
-  height: 48px;
-  overflow-x: auto;
-  scrollbar-width: none;
+/* ── SIDEBAR OVERLAY ── */
+#sidebarOverlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 400;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
 }
-.top-nav::-webkit-scrollbar { display:none; }
+#sidebarOverlay.show { opacity: 1; pointer-events: all; }
 
-.nav-brand {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--red3);
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  margin-right: 24px;
-  flex-shrink: 0;
-}
-
-.nav-pills {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-}
-
-.nav-pill {
-  font-family: var(--mono);
-  font-size: 10px;
-  padding: 4px 10px;
-  border-radius: 3px;
-  color: var(--muted);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all .15s;
-  border: 1px solid transparent;
-  text-decoration: none;
-}
-.nav-pill:hover { color: var(--bone); background: var(--ink3); }
-.nav-pill.active { color: var(--red3); border-color: var(--border2); background: var(--red-dim); }
-
-/* ── HERO ── */
-.hero {
-  min-height: 420px;
+/* ── SIDEBAR DRAWER ── */
+#sidebar {
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  width: 320px;
+  background: var(--white);
+  z-index: 500;
+  transform: translateX(-100%);
+  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: var(--shadow-lg);
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  padding: 60px 64px 56px;
-  position: relative;
   overflow: hidden;
-  border-bottom: 1px solid var(--border);
 }
+#sidebar.open { transform: translateX(0); }
 
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 60% 60% at 80% 50%, rgba(192,0,26,.18) 0%, transparent 70%),
-    radial-gradient(ellipse 30% 40% at 20% 80%, rgba(192,0,26,.08) 0%, transparent 70%);
+.sidebar-top {
+  padding: 24px 24px 20px;
+  border-bottom: 1px solid var(--light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
-
-.hero-grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(var(--border) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: linear-gradient(to bottom, transparent, rgba(0,0,0,.4) 40%, transparent);
+.sidebar-title-text {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.02em;
 }
-
-.hero-content { position:relative; z-index:2; max-width: 760px; }
-
-.hero-eyebrow {
-  font-family: var(--mono);
+.sidebar-subtitle {
+  font-family: var(--sans);
   font-size: 11px;
-  color: var(--red3);
-  letter-spacing: .14em;
+  color: var(--mid);
+  margin-top: 2px;
+}
+.sidebar-close {
+  width: 32px; height: 32px;
+  background: var(--lighter);
+  border: none; border-radius: 50%;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: var(--ink3);
+  transition: background 0.2s;
+}
+.sidebar-close:hover { background: var(--light); }
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 0 24px;
+}
+.sidebar-nav::-webkit-scrollbar { width: 3px; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: var(--light); }
+
+.nav-section-label {
+  font-family: var(--sans);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--mid);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  margin-bottom: 16px;
+  padding: 12px 24px 6px;
+}
+
+.nav-link {
   display: flex;
   align-items: center;
   gap: 10px;
-}
-.hero-eyebrow::before {
-  content:'';
-  display:inline-block;
-  width:28px; height:2px;
-  background:var(--red);
-}
-
-.hero-title {
-  font-family: var(--display);
-  font-size: clamp(56px, 7vw, 96px);
-  line-height: .95;
-  letter-spacing: .02em;
-  color: var(--bone);
-  margin-bottom: 20px;
-}
-.hero-title span { color: var(--red); }
-
-.hero-desc {
-  font-size: 15px;
-  color: var(--muted2);
-  max-width: 520px;
-  line-height: 1.75;
-  margin-bottom: 36px;
-}
-
-.hero-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.chip {
-  font-family: var(--mono);
-  font-size: 11px;
-  padding: 5px 14px;
-  border-radius: 2px;
-  background: var(--ink3);
-  border: 1px solid var(--border);
-  color: var(--muted2);
-}
-.chip.red { background: var(--red-dim); border-color: var(--border2); color: var(--red3); }
-
-/* ── CURRICULUM BAR ── */
-.curriculum-bar {
-  background: var(--ink2);
-  border-bottom: 1px solid var(--border);
-  padding: 20px 64px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-}
-.cb-item {
-  padding: 12px 20px;
-  border-right: 1px solid var(--border);
-}
-.cb-item:last-child { border-right:none; }
-.cb-val {
-  font-family: var(--display);
-  font-size: 32px;
-  color: var(--bone);
-  line-height: 1;
-}
-.cb-val span { color:var(--red); }
-.cb-lbl {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  margin-top: 4px;
-}
-
-/* ── PATHWAY NOTE ── */
-.pathway-note {
-  margin: 32px 64px;
-  padding: 16px 20px;
-  background: var(--red-dim);
-  border: 1px solid var(--border2);
-  border-left: 4px solid var(--red);
-  border-radius: 0 6px 6px 0;
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
+  padding: 10px 24px;
+  cursor: pointer;
+  font-family: var(--sans);
   font-size: 13px;
-  color: var(--bone2);
-  line-height: 1.6;
+  color: var(--ink3);
+  transition: all 0.15s;
+  border-left: 3px solid transparent;
+  text-decoration: none;
 }
-.pn-icon { font-size:20px; flex-shrink:0; margin-top:1px; }
-
-/* ── MODULE CHAPTER DIVIDER ── */
-.chapter-div {
-  position: relative;
-  background: var(--ink2);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  padding: 40px 64px;
-  overflow: hidden;
-  margin-top: 64px;
-}
-.chapter-div:first-of-type { margin-top: 0; }
-
-.ch-ghost {
-  position:absolute;
-  right: 48px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-family: var(--display);
-  font-size: 160px;
-  line-height: 1;
-  color: rgba(192,0,26,.08);
-  letter-spacing: .04em;
-  pointer-events:none;
-  user-select:none;
-}
-
-.ch-tag {
+.nav-link:hover { background: var(--red-pale); color: var(--red); border-left-color: var(--red); }
+.nav-link.active { background: var(--red-pale); color: var(--red); border-left-color: var(--red); font-weight: 600; }
+.nav-link .nav-num {
   font-family: var(--mono);
   font-size: 10px;
-  color: var(--red3);
-  letter-spacing: .14em;
+  color: var(--red);
+  min-width: 22px;
+}
+.nav-link .nav-icon { font-size: 14px; }
+
+/* ── FIXED TOP BAR ── */
+#topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 52px;
+  background: var(--red);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 14px;
+  z-index: 300;
+  box-shadow: 0 2px 12px rgba(200,0,30,0.3);
+}
+
+#hamburger {
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+#hamburger:hover { background: rgba(255,255,255,0.25); }
+#hamburger span {
+  display: block;
+  width: 16px; height: 1.5px;
+  background: white;
+  border-radius: 1px;
+  transition: all 0.2s;
+}
+
+.topbar-title {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  letter-spacing: 0.02em;
+}
+.topbar-sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: rgba(255,255,255,0.7);
+  margin-left: auto;
+}
+
+/* ── PAGE WRAPPER ── */
+.page-wrap {
+  margin-top: 52px;
+  min-height: 100vh;
+}
+
+/* ── COVER PAGE ── */
+.cover {
+  background: var(--white);
+  max-width: var(--max);
+  margin: 32px auto;
+  box-shadow: var(--shadow-lg);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.cover-banner {
+  background: var(--red);
+  padding: 48px 56px 44px;
+  position: relative;
+  overflow: hidden;
+}
+.cover-banner::before {
+  content: 'DIGITAL EDGE 101';
+  position: absolute;
+  bottom: -20px; right: -10px;
+  font-family: var(--sans);
+  font-size: 80px;
+  font-weight: 900;
+  color: rgba(255,255,255,0.06);
+  letter-spacing: -2px;
+  line-height: 1;
+  white-space: nowrap;
+}
+.cover-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: rgba(255,255,255,0.75);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.cover-title {
+  font-family: var(--sans);
+  font-size: 38px;
+  font-weight: 800;
+  color: white;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+.cover-title span { color: rgba(255,255,255,0.7); font-weight: 400; }
+.cover-desc {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: rgba(255,255,255,0.82);
+  max-width: 480px;
+  line-height: 1.65;
+}
+.cover-meta {
+  padding: 28px 56px;
+  display: flex;
+  gap: 32px;
+  border-bottom: 1px solid var(--light);
+  flex-wrap: wrap;
+}
+.meta-item { font-family: var(--sans); }
+.meta-val { font-size: 22px; font-weight: 700; color: var(--red); }
+.meta-lbl { font-size: 11px; color: var(--mid); margin-top: 2px; }
+
+.cover-note {
+  padding: 24px 56px 36px;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink3);
+  line-height: 1.7;
+  max-width: 600px;
+}
+.cover-note strong { color: var(--ink); }
+
+/* ── CHAPTER / MODULE ── */
+.module-page {
+  max-width: var(--max);
+  margin: 32px auto;
+  background: var(--white);
+  box-shadow: var(--shadow-lg);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.module-chapter-head {
+  background: var(--red);
+  padding: 36px 56px 32px;
+  position: relative;
+  overflow: hidden;
+}
+.module-chapter-head::after {
+  content: attr(data-num);
+  position: absolute;
+  right: 40px; top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--sans);
+  font-size: 120px;
+  font-weight: 900;
+  color: rgba(255,255,255,0.07);
+  line-height: 1;
+}
+.ch-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   margin-bottom: 10px;
 }
-
-.ch-title {
-  font-family: var(--display);
-  font-size: clamp(32px, 4vw, 52px);
-  color: var(--bone);
-  line-height: 1.05;
-  max-width: 600px;
-  margin-bottom: 12px;
+.ch-module-title {
+  font-family: var(--sans);
+  font-size: 28px;
+  font-weight: 800;
+  color: white;
+  line-height: 1.2;
+  margin-bottom: 10px;
 }
-
-.ch-focus {
-  font-size: 13px;
-  color: var(--muted2);
-  font-style: italic;
+.ch-focus-stmt {
   font-family: var(--serif);
-  max-width: 560px;
+  font-style: italic;
+  font-size: 13px;
+  color: rgba(255,255,255,0.8);
+  max-width: 520px;
   line-height: 1.6;
 }
 
-.ch-pathways {
-  margin-top: 16px;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.ch-pathway {
-  font-family: var(--mono);
-  font-size: 10px;
-  padding: 3px 10px;
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  color: var(--muted);
-  background: var(--ink);
-}
-
-/* ── MODULE BODY ── */
 .module-body {
-  padding: 40px 64px 0;
+  padding: 44px 56px 52px;
 }
 
-/* overview */
-.overview {
-  font-family: var(--serif);
-  font-size: 15px;
-  color: var(--bone2);
-  line-height: 1.85;
-  max-width: 740px;
-  margin-bottom: 40px;
-  padding-left: 20px;
-  border-left: 2px solid var(--red);
-}
-
-/* section heading */
-.sh {
+/* ── TYPOGRAPHY WITHIN MODULE ── */
+.section-head {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin: 36px 0 14px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 18px;
-  margin-top: 36px;
-}
-.sh-label {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--red3);
-  text-transform: uppercase;
-  letter-spacing: .12em;
-}
-.sh-line { flex:1; height:1px; background:var(--border); }
-
-/* concepts */
-.concepts-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  margin-bottom: 4px;
+}
+.section-head::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--red-border);
 }
 
-.cc {
-  background: var(--ink2);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 16px 18px;
-  position: relative;
-  overflow: hidden;
-  transition: border-color .2s, background .2s;
+.prose {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.9;
+  margin-bottom: 18px;
 }
-.cc::after {
-  content:'';
-  position:absolute;
-  top:0;left:0;right:0;
-  height:2px;
-  background:linear-gradient(90deg, var(--red), transparent);
-  opacity:0;
-  transition:opacity .2s;
-}
-.cc:hover { border-color: var(--border2); background: var(--ink3); }
-.cc:hover::after { opacity:1; }
+.prose strong { color: var(--red-dark); font-weight: 700; }
+.prose em { color: var(--ink2); }
 
-.cc-title {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--bone);
-  margin-bottom: 7px;
-  letter-spacing:.01em;
-}
-.cc-desc {
-  font-size: 12px;
-  color: var(--muted2);
+.analogy-box {
+  background: #FFF8E7;
+  border-left: 4px solid #F5A623;
+  border-radius: 0 8px 8px 0;
+  padding: 18px 22px;
+  margin: 22px 0;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: #5A4000;
   line-height: 1.7;
 }
-
-/* applications */
-.apps-list {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  margin-bottom: 4px;
-}
-.app-item {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  padding: 10px 14px;
-  background: var(--ink2);
-  border: 1px solid var(--border);
-  border-radius: 5px;
+.analogy-box::before {
+  content: '💡 Think of it this way:';
+  display: block;
+  font-weight: 700;
   font-size: 12px;
-  color: var(--muted2);
-  line-height: 1.55;
-  transition: border-color .2s;
+  margin-bottom: 6px;
+  color: #7A5500;
+  letter-spacing: 0.02em;
 }
-.app-item:hover { border-color: var(--border2); color: var(--bone); }
-.app-arrow { color:var(--red); flex-shrink:0; font-weight:700; }
 
-/* quiz pathway */
-.quiz-box {
-  background: linear-gradient(135deg, var(--ink2), var(--ink3));
-  border: 1px solid var(--border2);
+.concept-block {
+  background: var(--lighter);
+  border: 1px solid var(--light);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin: 16px 0;
+}
+.concept-block-title {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--red-dark);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.concept-block-body {
+  font-family: var(--serif);
+  font-size: 14px;
+  color: var(--ink2);
+  line-height: 1.85;
+}
+.concept-block-body strong { color: var(--red-dark); }
+
+.example-box {
+  background: var(--red-pale);
+  border: 1px solid var(--red-border);
   border-radius: 8px;
   padding: 18px 22px;
-  margin: 32px 0 0;
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
+  margin: 18px 0;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.7;
 }
-.quiz-icon {
-  width: 36px; height: 36px;
-  background: var(--red);
-  border-radius: 6px;
-  display:flex; align-items:center; justify-content:center;
-  font-size:16px;
-  flex-shrink:0;
+.example-box::before {
+  content: '🌍 Real-World Example:';
+  display: block;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--red-dark);
+  margin-bottom: 8px;
 }
-.quiz-content {}
-.quiz-label {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--red3);
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  margin-bottom:4px;
-}
-.quiz-title { font-size:13px; font-weight:700; color:var(--bone); margin-bottom:4px; }
-.quiz-desc { font-size:12px; color:var(--muted2); line-height:1.6; }
 
-/* terms */
-.terms-row {
-  display:flex; flex-wrap:wrap; gap:7px;
-  margin-bottom:4px;
+.quiz-tip {
+  background: #F0F7FF;
+  border: 1px solid #BFD9F5;
+  border-left: 4px solid #1A7FDB;
+  border-radius: 0 8px 8px 0;
+  padding: 18px 22px;
+  margin: 28px 0 0;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: #0D3560;
+  line-height: 1.7;
 }
-.term {
+.quiz-tip::before {
+  content: '🎯 For the NASSCOM Quiz:';
+  display: block;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: #0D3560;
+  margin-bottom: 8px;
+}
+
+.key-terms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0;
+}
+.kt {
   font-family: var(--mono);
   font-size: 11px;
-  padding: 4px 11px;
-  border: 1px solid var(--border2);
-  border-radius: 2px;
-  color: var(--red3);
-  background: var(--red-dim);
-  cursor:default;
-  transition: background .2s;
-}
-.term:hover { background: rgba(192,0,26,.22); }
-
-/* exam tip */
-.exam-tip {
-  margin: 36px 0 0;
-  padding: 18px 22px 18px 64px;
-  background: var(--ink2);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  position:relative;
-  font-size:13px;
-  color:var(--bone2);
-  line-height:1.75;
-}
-.et-num {
-  position:absolute;
-  left:18px;
-  top:16px;
-  font-family:var(--display);
-  font-size:28px;
-  color:var(--red);
-  line-height:1;
-}
-.et-label {
-  font-family:var(--mono);
-  font-size:9px;
-  color:var(--red3);
-  text-transform:uppercase;
-  letter-spacing:.14em;
-  margin-bottom:5px;
+  padding: 4px 12px;
+  border: 1px solid var(--red-border);
+  border-radius: 20px;
+  color: var(--red-dark);
+  background: var(--red-pale);
 }
 
-/* ── FOOTER ── */
-.footer {
-  margin-top:80px;
-  padding: 36px 64px;
-  border-top:1px solid var(--border);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:12px;
-}
-.footer-brand {
-  font-family:var(--display);
-  font-size:22px;
-  color:var(--muted);
-  letter-spacing:.04em;
-}
-.footer-meta {
-  font-family:var(--mono);
-  font-size:10px;
-  color:var(--muted);
-  text-align:right;
-  line-height:1.8;
-}
+/* divider between modules */
+.module-gap { height: 8px; }
 
-/* ── BACK TOP ── */
-#backTop {
-  position:fixed; bottom:28px; right:28px;
-  width:42px;height:42px;
-  background:var(--red);
-  border:none; border-radius:4px;
-  color:#fff; font-size:18px; cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  opacity:0; transform:translateY(8px);
-  transition:all .3s;
-  box-shadow:0 4px 20px rgba(192,0,26,.5);
-  z-index:100;
+/* back to top */
+#btt {
+  position: fixed;
+  bottom: 28px; right: 28px;
+  width: 44px; height: 44px;
+  background: var(--red);
+  border: none; border-radius: 50%;
+  color: white; font-size: 18px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(200,0,30,0.4);
+  opacity: 0; transform: translateY(8px);
+  transition: all 0.3s;
+  z-index: 200;
 }
-#backTop.vis { opacity:1; transform:translateY(0); }
-#backTop:hover { background:var(--red2); }
+#btt.vis { opacity: 1; transform: translateY(0); }
 
-/* ── RESPONSIVE ── */
-@media(max-width:768px){
-  .hero { padding:40px 24px 40px; }
-  .module-body { padding:28px 24px 0; }
-  .chapter-div { padding:28px 24px; }
-  .curriculum-bar { grid-template-columns:1fr 1fr; padding:16px 24px; }
-  .pathway-note { margin:20px 24px; }
-  .concepts-grid, .apps-list { grid-template-columns:1fr; }
-  .hero-title { font-size:48px; }
-  .ch-ghost { display:none; }
-  .footer { padding:28px 24px; flex-direction:column; align-items:flex-start; }
-  .footer-meta { text-align:left; }
+@media(max-width:700px){
+  .cover-banner,.module-chapter-head { padding: 28px 24px; }
+  .module-body,.cover-meta,.cover-note { padding-left:24px; padding-right:24px; }
+  .cover-title { font-size:26px; }
+  .ch-module-title { font-size:20px; }
+  .prose { font-size:14px; }
 }
 </style>
 </head>
 <body>
 
-<!-- STICKY TOP NAV -->
-<header class="top-nav" id="topNav">
-  <span class="nav-brand">EDGE 101</span>
-  <div class="nav-pills" id="navPills"></div>
+<!-- SIDEBAR OVERLAY -->
+<div id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sidebar-top">
+    <div>
+      <div class="sidebar-title-text">Digital Edge 101</div>
+      <div class="sidebar-subtitle">NASSCOM FutureSkills Prime</div>
+    </div>
+    <button class="sidebar-close" onclick="closeSidebar()">✕</button>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-section-label">Introduction</div>
+    <a class="nav-link" href="#cover" onclick="closeSidebar()"><span class="nav-num">—</span><span>Course Overview</span></a>
+
+    <div class="nav-section-label">10 Modules</div>
+    <a class="nav-link" href="#m1" onclick="closeSidebar()"><span class="nav-num">01</span><span class="nav-icon">🤖</span><span>AI & Big Data Analytics</span></a>
+    <a class="nav-link" href="#m2" onclick="closeSidebar()"><span class="nav-num">02</span><span class="nav-icon">📡</span><span>Internet of Things</span></a>
+    <a class="nav-link" href="#m3" onclick="closeSidebar()"><span class="nav-num">03</span><span class="nav-icon">🔐</span><span>Cybersecurity</span></a>
+    <a class="nav-link" href="#m4" onclick="closeSidebar()"><span class="nav-num">04</span><span class="nav-icon">⛓️</span><span>Blockchain</span></a>
+    <a class="nav-link" href="#m5" onclick="closeSidebar()"><span class="nav-num">05</span><span class="nav-icon">⚙️</span><span>Robotic Process Automation</span></a>
+    <a class="nav-link" href="#m6" onclick="closeSidebar()"><span class="nav-num">06</span><span class="nav-icon">🥽</span><span>AR & VR</span></a>
+    <a class="nav-link" href="#m7" onclick="closeSidebar()"><span class="nav-num">07</span><span class="nav-icon">☁️</span><span>Cloud Computing</span></a>
+    <a class="nav-link" href="#m8" onclick="closeSidebar()"><span class="nav-num">08</span><span class="nav-icon">🖨️</span><span>3D Printing & Modeling</span></a>
+    <a class="nav-link" href="#m9" onclick="closeSidebar()"><span class="nav-num">09</span><span class="nav-icon">🌐</span><span>Web, Mobile & Marketing</span></a>
+    <a class="nav-link" href="#m10" onclick="closeSidebar()"><span class="nav-num">10</span><span class="nav-icon">⚖️</span><span>Responsible AI</span></a>
+  </div>
+</nav>
+
+<!-- TOP BAR -->
+<header id="topbar">
+  <button id="hamburger" onclick="openSidebar()" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div>
+    <div class="topbar-title">NASSCOM Digital Edge 101 — Study Guide</div>
+  </div>
+  <div class="topbar-sub">10 Modules · 30 Hours</div>
 </header>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-grid"></div>
-  <div class="hero-content">
-    <div class="hero-eyebrow">NASSCOM FutureSkills Prime · Official Curriculum</div>
-    <h1 class="hero-title">Digital<br><span>Edge</span> 101</h1>
-    <p class="hero-desc">The complete study guide for all 10 modules of the Digital Edge 101 certification. Aligned to the official curriculum — covering AI, IoT, Cybersecurity, Blockchain, RPA, AR/VR, Cloud, 3D Printing, Web/Mobile, and Responsible AI.</p>
-    <div class="hero-chips">
-      <span class="chip red">30 Hours Total</span>
-      <span class="chip red">Microlearning Pathways</span>
-      <span class="chip red">Quiz-Validated</span>
-      <span class="chip">10 Modules</span>
-      <span class="chip">NCrF Credit Eligible</span>
-      <span class="chip">NSQF Level 4</span>
+<div class="page-wrap">
+
+<!-- COVER -->
+<div class="cover" id="cover">
+  <div class="cover-banner">
+    <div class="cover-eyebrow">NASSCOM FutureSkills Prime · Official Curriculum Study Guide</div>
+    <div class="cover-title">Digital Edge 101<br><span>Complete Deep-Dive Guide</span></div>
+    <div class="cover-desc">Everything explained simply and deeply — written so that anyone, even a complete beginner, can understand the 10 most important technologies shaping the world right now.</div>
+  </div>
+  <div class="cover-meta">
+    <div class="meta-item"><div class="meta-val">10</div><div class="meta-lbl">Technology Modules</div></div>
+    <div class="meta-item"><div class="meta-val">30 hrs</div><div class="meta-lbl">Total Duration</div></div>
+    <div class="meta-item"><div class="meta-val">1</div><div class="meta-lbl">NCrF Academic Credit</div></div>
+    <div class="meta-item"><div class="meta-val">NSQF 4</div><div class="meta-lbl">Qualification Level</div></div>
+  </div>
+  <div class="cover-note">
+    <strong>How this guide works:</strong> Each module is explained like a teacher sitting next to you — with simple language, real stories, analogies that make sense, and clear explanations of why each technology matters. At the end of each module you'll find the key terms to remember and exactly what the NASSCOM quiz tends to focus on. Use the ☰ menu at the top-left to jump to any module instantly.
+  </div>
+</div>
+
+<!-- MODULE 1 -->
+<div class="module-page" id="m1">
+  <div class="module-chapter-head" data-num="01">
+    <div class="ch-eyebrow">Module 01 of 10 · ~3 Hours</div>
+    <div class="ch-module-title">🤖 Artificial Intelligence &amp; Big Data Analytics</div>
+    <div class="ch-focus-stmt">"Focus on the principles of Artificial Intelligence, Machine Learning concepts, and leveraging Big Data for business insights."</div>
+  </div>
+  <div class="module-body">
+
+    <div class="section-head">What Even Is Artificial Intelligence?</div>
+    <p class="prose">Let's start from the very beginning. Imagine you have a younger sibling who has never seen a cat before. You show them 100 pictures of cats — fluffy ones, big ones, tiny ones, black ones, orange ones. After a while, when you show them a new picture of a cat they have never seen, they can still say "that's a cat!" They learned from examples. <strong>That is exactly what Artificial Intelligence does.</strong> It learns from examples, finds patterns, and then uses those patterns to make decisions on things it has never seen before.</p>
+
+    <p class="prose">The formal definition: AI is the ability of a computer program or machine to <strong>think, learn, and make decisions</strong> in a way that mimics human intelligence. Notice that it says "mimics" — machines don't actually think the way humans do. They are very, very good at finding mathematical patterns in large amounts of data. That's it. But that turns out to be incredibly powerful.</p>
+
+    <div class="analogy-box">Imagine a very dedicated student who reads 10 million medical textbooks in one night, memorizes every disease symptom ever recorded, and then when a patient describes their symptoms, can instantly suggest what disease it might be. That's what AI can do — process enormous amounts of information far faster than any human could ever read.</div>
+
+    <div class="section-head">The Difference Between AI, Machine Learning, and Deep Learning</div>
+    <p class="prose">These three words get thrown around a lot and people use them as if they mean the same thing. They don't. Think of them as <strong>nested boxes</strong> — like Russian dolls, one inside the other.</p>
+
+    <div class="concept-block">
+      <div class="concept-block-title">🌐 Artificial Intelligence (The Big Box)</div>
+      <div class="concept-block-body">AI is the broadest term. It means any technique that makes a machine appear intelligent. This includes simple rule-based systems — like a thermostat that turns on the heater when temperature drops below 18°C. That's basic AI. <strong>AI is the goal: make machines smart.</strong></div>
     </div>
-  </div>
-</section>
 
-<!-- CURRICULUM STATS BAR -->
-<div class="curriculum-bar">
-  <div class="cb-item">
-    <div class="cb-val"><span>30</span> hrs</div>
-    <div class="cb-lbl">Total Duration</div>
-  </div>
-  <div class="cb-item">
-    <div class="cb-val"><span>60</span>×</div>
-    <div class="cb-lbl">30-Min Pathways</div>
-  </div>
-  <div class="cb-item">
-    <div class="cb-val"><span>10</span></div>
-    <div class="cb-lbl">Technology Modules</div>
-  </div>
-  <div class="cb-item">
-    <div class="cb-val"><span>60</span>+</div>
-    <div class="cb-lbl">Pathway Quizzes</div>
+    <div class="concept-block">
+      <div class="concept-block-title">📊 Machine Learning (The Medium Box Inside AI)</div>
+      <div class="concept-block-body">ML is a specific way of achieving AI. Instead of a programmer writing rules by hand ("if temperature below 18, turn on heater"), in Machine Learning <strong>the machine figures out the rules itself by looking at data</strong>. You give it thousands of examples, and it learns the pattern on its own. Almost all modern AI is actually Machine Learning.<br><br>
+      <strong>Three types of Machine Learning:</strong><br><br>
+      <strong>1. Supervised Learning</strong> — You give the machine labeled examples. Like a teacher grading homework. You show it 10,000 emails and label each one as "spam" or "not spam." The machine learns to tell the difference by itself. Used in: email spam detection, loan approval systems, medical diagnosis.<br><br>
+      <strong>2. Unsupervised Learning</strong> — No labels. You just give the machine a pile of data and say "find patterns." The machine groups similar things together on its own. Like a librarian sorting books into categories without being told what the categories are. Used in: customer grouping in marketing, anomaly detection in bank transactions.<br><br>
+      <strong>3. Reinforcement Learning</strong> — The machine learns by trial and error, getting rewards for correct actions and penalties for wrong ones. Exactly like training a dog with treats. Used in: Google DeepMind's AlphaGo (learned to beat world chess champions), self-driving car steering.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">🧠 Deep Learning (The Small Box Inside Machine Learning)</div>
+      <div class="concept-block-body">Deep Learning is a special type of Machine Learning that uses <strong>artificial neural networks</strong> — a system loosely inspired by the human brain. The "deep" means there are many layers of these networks stacked on top of each other, each layer learning more abstract patterns than the previous one.<br><br>
+      For example, when recognizing a face in a photo: Layer 1 detects edges and lines. Layer 2 detects eyes, noses, ears. Layer 3 assembles these into a face. Layer 4 matches it to a known person. <strong>This is what powers Face ID on your phone, Google Translate, ChatGPT, and Alexa.</strong></div>
+    </div>
+
+    <div class="example-box">When you use Google Photos and it automatically groups all photos of your grandmother together — that's Deep Learning facial recognition. When YouTube suggests the next video — that's Machine Learning. When a simple alarm rings at 7 AM — that's basic rules-based AI.</div>
+
+    <div class="section-head">What Is Big Data and Why Does It Matter?</div>
+    <p class="prose">Every single second, humans generate an absolutely staggering amount of data. Every WhatsApp message, every Google search, every online purchase, every GPS movement, every Instagram like, every credit card swipe — all of it generates data. How much? <strong>2.5 quintillion bytes of data are created every day.</strong> That's 2,500,000,000,000,000,000 bytes. Written out, that number is 19 digits long. No spreadsheet on earth can handle that. Traditional databases crash. This is what we call Big Data.</p>
+
+    <p class="prose">Big Data is defined by <strong>five characteristics called the 5 Vs</strong>. This is one of the most important things to remember for your quiz, so let's understand each one with a real example:</p>
+
+    <div class="concept-block">
+      <div class="concept-block-title">The 5 Vs of Big Data</div>
+      <div class="concept-block-body">
+        <strong>Volume</strong> — The sheer size. Facebook stores over 100 petabytes of photos. One petabyte = 1,000 terabytes. Your phone probably has 128 GB. Facebook has 100 million times more data than your phone, just in photos.<br><br>
+        <strong>Velocity</strong> — The speed at which data is generated. Twitter/X sees 350,000 tweets every minute. Google processes 8.5 billion searches per day — that's 99,000 every second. This data must be processed in real-time, not after a delay.<br><br>
+        <strong>Variety</strong> — The different types of data. Structured data has rows and columns (like Excel tables — bank transactions, product prices). Unstructured data has no fixed format — photos, videos, voice recordings, emails. Semi-structured data is in between — JSON files, XML. Real-world Big Data is a messy mix of all three.<br><br>
+        <strong>Veracity</strong> — The truthfulness and accuracy of the data. Not all data is clean. Social media has bots, hospitals have incorrectly entered patient names, GPS sometimes gives wrong locations. Veracity asks: can we trust this data? Bad data fed into AI gives bad results — "garbage in, garbage out."<br><br>
+        <strong>Value</strong> — The most important V. All that data is worthless unless you extract something useful from it. The value is the business insight, the decision, the prediction that helps a company or government do something better.
+      </div>
+    </div>
+
+    <div class="section-head">The Four Types of Analytics — From Simple to Powerful</div>
+    <p class="prose">When companies analyze their Big Data, they use four levels of analytics, each more powerful and valuable than the last:</p>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Four Analytics Types</div>
+      <div class="concept-block-body">
+        <strong>1. Descriptive Analytics</strong> — "What happened?" This is the simplest. Looking at the past. Monthly sales reports, website traffic dashboards, app download counts. It describes reality but doesn't explain why. Example: "Our sales were ₹10 crore last quarter."<br><br>
+        <strong>2. Diagnostic Analytics</strong> — "Why did it happen?" Dig deeper into the data to find the cause. Example: "Sales dropped 20% in August because there was heavy flooding in Maharashtra that month, which kept shoppers home." You're finding the root cause.<br><br>
+        <strong>3. Predictive Analytics</strong> — "What will happen?" Use past patterns to forecast the future. This is where Machine Learning comes in. Example: "Based on weather patterns and historical data, we predict 15% higher umbrella sales next month." Netflix predicts which show you'll watch next. Banks predict which loan applicants are likely to default.<br><br>
+        <strong>4. Prescriptive Analytics</strong> — "What should we do about it?" The most advanced type. Not just predict, but recommend the best action. Example: "Given predicted lower sales, we recommend reducing inventory by 20% and launching a discount campaign in North India." This is used in supply chain optimization, financial portfolio management, and medical treatment planning.
+      </div>
+    </div>
+
+    <div class="section-head">How AI Is Changing Real Life in India</div>
+    <p class="prose">This isn't some faraway technology. It's already deeply embedded in your daily life in India right now:</p>
+    <p class="prose"><strong>UPI Fraud Detection:</strong> Every time you send money on PhonePe or Google Pay, an AI system checks that transaction in under 200 milliseconds — faster than a blink — and decides whether it looks fraudulent. It analyzes over 200 signals: your location, the amount, the time of day, who you're sending to, whether this is unusual for your patterns. The NPCI processes over 10 billion UPI transactions monthly, all screened by AI.</p>
+    <p class="prose"><strong>Medical Diagnosis:</strong> ICMR (Indian Council of Medical Research) has piloted AI tools that can detect tuberculosis from chest X-ray images. India has 26 lakh TB patients annually, and there aren't enough radiologists, especially in rural areas. AI can screen X-rays in seconds and flag the suspicious ones for a doctor to review — potentially saving thousands of lives every year.</p>
+    <p class="prose"><strong>Agriculture — The Kisan AI:</strong> Apps like Plantix (used by 12 million Indian farmers) use your smartphone camera to photograph a sick leaf and AI instantly identifies the disease from its visual pattern and suggests treatment. This is Deep Learning image recognition serving the farmers of rural India.</p>
+
+    <div class="key-terms">
+      <span class="kt">Artificial Intelligence</span><span class="kt">Machine Learning</span><span class="kt">Deep Learning</span><span class="kt">Neural Network</span><span class="kt">Supervised Learning</span><span class="kt">Unsupervised Learning</span><span class="kt">Reinforcement Learning</span><span class="kt">5 Vs of Big Data</span><span class="kt">Predictive Analytics</span><span class="kt">NLP</span><span class="kt">Computer Vision</span><span class="kt">Training Data</span>
+    </div>
+
+    <div class="quiz-tip">
+      The NASSCOM quiz for this module loves to test: (1) the nested relationship — AI contains ML which contains Deep Learning; (2) matching each of the 5 Vs to a real example; (3) identifying which type of analytics (descriptive/diagnostic/predictive/prescriptive) is being described in a scenario. A very common question: "A company analyzed last year's sales data to understand trends" — that's Descriptive Analytics. "A bank's system predicted a customer will miss their loan payment next month" — that's Predictive Analytics.
+    </div>
+
   </div>
 </div>
 
-<!-- FORMAT NOTE -->
-<div class="pathway-note">
-  <span class="pn-icon">📋</span>
-  <span><strong>Format:</strong> Each module is delivered through short, focused <strong>30-minute Pathways</strong> (Microlearning). A quiz follows each pathway to confirm knowledge. Complete all 60 pathways across the 10 modules to earn the NCrF credit.</span>
+<!-- MODULE 2 -->
+<div class="module-page" id="m2">
+  <div class="module-chapter-head" data-num="02">
+    <div class="ch-eyebrow">Module 02 of 10 · ~2.5 Hours</div>
+    <div class="ch-module-title">📡 Internet of Things (IoT)</div>
+    <div class="ch-focus-stmt">"Understanding the network of connected devices, data flow, and building smart ecosystems."</div>
+  </div>
+  <div class="module-body">
+
+    <div class="section-head">What Is the Internet of Things?</div>
+    <p class="prose">The Internet of Things, or IoT, is one of those phrases that sounds very technical but is actually based on a simple idea: <strong>what if everyday physical objects could talk to each other over the internet?</strong> Not just computers and phones — but your fan, your water pipe, your cow, your farm soil, your car, your hospital bed. What if all of these could sense what's happening around them, send that information somewhere, and trigger an action — all without a human pressing a button?</p>
+
+    <div class="analogy-box">Think of the human nervous system. Your skin has sensors (nerve endings) that detect heat, cold, pain, pressure. They send signals through nerves (network) to your brain (cloud/processing). Your brain then sends a command back — "move your hand away from the hot plate." IoT does exactly this for buildings, cities, factories, and farms. Objects become the sensors, the internet is the nervous system, and servers are the brain.</div>
+
+    <p class="prose">The term was coined by <strong>Kevin Ashton in 1999</strong> while working at MIT, but the technology only became truly practical in the last decade as internet connectivity got cheaper, sensors got tinier and more affordable, and cloud storage became available to everyone.</p>
+
+    <div class="section-head">The Four Layers of IoT Architecture</div>
+    <p class="prose">Every IoT system, whether it's a smart bulb in your bedroom or an industrial robot in a factory, works through the same four-layer structure. Understanding this is essential for your quiz.</p>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Layer 1: Perception Layer (The Senses)</div>
+      <div class="concept-block-body">This is the physical layer — the actual devices and sensors in the real world that collect data. <strong>Sensors</strong> are devices that detect physical quantities: temperature sensors, motion detectors, GPS trackers, soil moisture sensors, heart rate monitors, smoke detectors, cameras, microphones, pressure sensors, humidity sensors. <strong>Actuators</strong> are the opposite — they receive commands and do something physical: a motor that opens a valve, a relay that turns on a light, a pump that starts watering crops. This layer is where the physical world meets the digital world.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Layer 2: Network Layer (The Nervous System)</div>
+      <div class="concept-block-body">This layer transmits the data collected by sensors from the device to wherever it needs to go for processing. Different technologies are used depending on the distance and power requirements:<br><br>
+      <strong>WiFi</strong> — High data, short range (your home/office). <strong>Bluetooth</strong> — Very short range, very low power (your smartwatch talking to your phone). <strong>Zigbee</strong> — Short range, mesh network for smart home devices. <strong>4G/5G</strong> — Long range, high speed, expensive (connected cars, remote monitoring). <strong>LoRaWAN</strong> — Very long range (10-15 km), very low power, very low data — perfect for farm sensors that run on solar for years. <strong>NB-IoT</strong> — Similar to LoRaWAN, uses mobile networks, good for smart meters in cities.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Layer 3: Processing Layer (The Brain)</div>
+      <div class="concept-block-body">The raw data arrives here and gets cleaned, analyzed, and turned into something useful. This can happen in two places:<br><br>
+      <strong>Cloud Computing</strong> — Data goes all the way to a remote data center (like AWS or Azure servers) for processing. Has huge computing power, great for complex analysis. But takes time — there's a delay (latency).<br><br>
+      <strong>Edge Computing</strong> — Data is processed right at the device or at a nearby gateway, not sent to a distant cloud. Much faster — responses in milliseconds. Used when speed is critical, like detecting a factory machine about to break down, or a self-driving car making split-second steering decisions. "Edge" means the edge of the network — close to the source.<br><br>
+      <strong>Fog Computing</strong> — An intermediate layer between edge and cloud. A local server (maybe at the factory or a neighbourhood hub) handles processing before sending summarized results to the cloud.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Layer 4: Application Layer (The Interface)</div>
+      <div class="concept-block-body">This is what the end-user actually sees and interacts with — the mobile app, the dashboard on a screen, the automated email alert, the automatic action triggered. Your smart home app on your phone that shows you the temperature and lets you control the AC is the Application Layer. A hospital dashboard showing real-time patient vitals is the Application Layer. The automated SMS you get when your water tank overflows is the Application Layer.</div>
+    </div>
+
+    <div class="section-head">MQTT — The Language IoT Devices Speak</div>
+    <p class="prose"><strong>MQTT (Message Queuing Telemetry Transport)</strong> is the most important communication protocol in IoT. It was designed for one purpose: let tiny, low-power devices send data efficiently over unreliable networks. Here's how it works:</p>
+    <p class="prose">Imagine a WhatsApp group. One person publishes a message, and everyone who has joined that group receives it. MQTT works exactly the same way. Sensors (publishers) publish data to a topic (like a WhatsApp group) on a server called a broker. Applications (subscribers) that want that data have subscribed to that topic and receive it automatically. This publish-subscribe model is perfect for IoT because a device doesn't need to know who is listening — it just sends data and moves on, using minimal battery.</p>
+
+    <div class="section-head">IoT Security — The Biggest Problem Nobody Talks About</div>
+    <p class="prose">Here's a scary fact: most IoT devices are extremely insecure. Your home WiFi router, smart bulb, CCTV camera — many of these ship with <strong>default usernames and passwords</strong> that millions of users never change. In 2016, hackers used a piece of malware called Mirai to infect over 600,000 IoT devices (mostly cameras and DVRs) and turned them into an army of bots that launched one of the largest internet attacks in history, taking down Twitter, Netflix, and Reddit for hours. All because people hadn't changed their default password.</p>
+    <p class="prose">The key security challenges: (1) Devices have limited computing power, so they often can't run heavy encryption. (2) Billions of devices make it impossible to manually update all of them. (3) Physical access to a device can compromise it entirely. (4) Many manufacturers stop providing software updates after a few years, leaving devices permanently vulnerable.</p>
+
+    <div class="section-head">Digital Twins — One of the Coolest IoT Concepts</div>
+    <p class="prose">A <strong>Digital Twin</strong> is a live, virtual replica of a physical object that gets updated in real-time through IoT sensors. Imagine a jet engine flying at 35,000 feet with 500 sensors on it, sending temperature, vibration, pressure, and fuel data every second. Engineers on the ground have a perfect 3D digital copy of that engine on their screens, showing exactly what's happening inside it in real-time. They can run simulations — "what if we increase thrust by 5%?" — without touching the real engine. Rolls-Royce does exactly this for its aircraft engines. Siemens uses digital twins for entire factories.</p>
+
+    <div class="example-box">In India, the Smart Cities Mission (covering 100 cities) uses IoT sensors for: adaptive traffic signals that adjust green/red timing based on real traffic flow (reducing average commute time by 15-20%), smart street lighting that dims when no one is around (saving 40% energy), smart parking systems showing available spots in real-time, and water pipeline leak detection that senses pressure drops and alerts municipal workers before a road floods.</div>
+
+    <div class="key-terms">
+      <span class="kt">IoT</span><span class="kt">Sensor</span><span class="kt">Actuator</span><span class="kt">MQTT</span><span class="kt">Gateway</span><span class="kt">Edge Computing</span><span class="kt">Fog Computing</span><span class="kt">LoRaWAN</span><span class="kt">Digital Twin</span><span class="kt">M2M</span><span class="kt">Smart Grid</span><span class="kt">Pub-Sub Model</span>
+    </div>
+
+    <div class="quiz-tip">
+      For the IoT quiz, the 4-layer architecture is the most tested concept — know all 4 layers and what happens at each. Protocol questions are common: "Which protocol is best for a farm sensor that needs to transmit tiny amounts of data over 15 km and run on a small battery for 5 years?" — Answer: LoRaWAN. Edge vs Cloud: "Which approach is needed when a self-driving car must react in milliseconds?" — Answer: Edge Computing, because cloud has too much latency. Know the Digital Twin definition clearly.
+    </div>
+
+  </div>
 </div>
 
-<!-- MODULES INJECTED HERE -->
-<div id="moduleContainer"></div>
-
-<footer class="footer">
-  <div class="footer-brand">NASSCOM · Digital Edge 101</div>
-  <div class="footer-meta">
-    NASSCOM FutureSkills Prime · NSQF Level 4<br>
-    NCrF Credit Eligible · 30 Hours · 10 Modules
+<!-- MODULE 3 -->
+<div class="module-page" id="m3">
+  <div class="module-chapter-head" data-num="03">
+    <div class="ch-eyebrow">Module 03 of 10 · ~2.5 Hours</div>
+    <div class="ch-module-title">🔐 Cybersecurity</div>
+    <div class="ch-focus-stmt">"Essential concepts of digital security, identifying threats, and fundamental protective strategies for individuals and businesses."</div>
   </div>
-</footer>
+  <div class="module-body">
 
-<button id="backTop" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+    <div class="section-head">Why Cybersecurity Is Literally Life and Death Now</div>
+    <p class="prose">In 2021, a hospital in Germany was hit by a ransomware attack. Their computer systems were locked. Doctors couldn't access patient records. A critically ill patient had to be transferred to another hospital 30 km away. She died during the transfer. This was the first confirmed death directly linked to a cyberattack. <strong>Cybersecurity is no longer just about protecting data — it's about protecting human lives.</strong></p>
+    <p class="prose">India is particularly vulnerable right now. We have over 900 million internet users, we process more digital payments than any other country on earth (UPI alone handles 10 billion transactions a month), and we are rapidly digitizing everything from healthcare records (ABDM) to land ownership (Digital India). Every digital system is a potential target. Understanding how to protect them is one of the most critical skills of our time.</p>
+
+    <div class="section-head">The CIA Triad — The Foundation of All Security</div>
+    <p class="prose">Every decision in cybersecurity comes back to three fundamental principles, called the <strong>CIA Triad</strong>. Not the spy agency — CIA stands for <strong>Confidentiality, Integrity, and Availability</strong>. These are the three things any secure system must guarantee:</p>
+
+    <div class="concept-block">
+      <div class="concept-block-title">C — Confidentiality</div>
+      <div class="concept-block-body">Only the right people should see certain information. Your bank statement should only be visible to you and your bank — not to your neighbour, not to a hacker, not to an unauthorized employee at the bank. <strong>Encryption</strong> is the main tool used to ensure confidentiality. When you see "HTTPS" in a browser address bar, that little padlock means your data is encrypted — scrambled into unreadable code that only your browser and the website's server can decode.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">I — Integrity</div>
+      <div class="concept-block-body">Information should be accurate and unaltered. If you transfer ₹500 to a friend, the amount that reaches them should be exactly ₹500 — not ₹5 because a hacker intercepted and changed the message. <strong>Hashing</strong> is used to verify integrity — it creates a unique "fingerprint" of data. If even one character changes, the fingerprint changes completely. Any tampering is immediately detectable.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">A — Availability</div>
+      <div class="concept-block-body">Systems should be accessible and working when needed. A hospital's patient database being offline during an emergency is an availability failure — even if nobody stole any data. DDoS attacks specifically target availability — they flood a website with so much fake traffic that real users can't get in. <strong>Redundancy, backups, and DDoS protection</strong> maintain availability.</div>
+    </div>
+
+    <div class="section-head">The Biggest Threats You Need to Know</div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">🎣 Phishing — The #1 Attack (91% of Breaches Start Here)</div>
+      <div class="concept-block-body">Phishing is when attackers send fake emails, messages, or create fake websites that look exactly like real ones — your bank, your email provider, your delivery company — to trick you into entering your password or clicking a malicious link. It's called "phishing" because you're being baited like a fish. <strong>Spear phishing</strong> is targeted — the attacker researches you personally and sends a convincing message that seems to come from your own boss or a known contact. <strong>Whaling</strong> targets CEOs and senior executives specifically.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">🦠 Malware — Malicious Software</div>
+      <div class="concept-block-body"><strong>Virus:</strong> Attaches itself to legitimate files and spreads when those files are shared — like a biological virus. <strong>Worm:</strong> Spreads on its own through networks without needing human action — more dangerous. <strong>Trojan:</strong> Disguised as legitimate software ("free movie downloader") but carries hidden malicious code. <strong>Ransomware:</strong> Encrypts all your files and demands payment (ransom) in Bitcoin for the decryption key. The WannaCry ransomware attack in 2017 hit 200,000 computers across 150 countries including Indian government offices, encrypting everything and demanding $300 in Bitcoin. <strong>Spyware:</strong> Secretly monitors your activity and sends it to attackers — keyloggers record every key you press, stealing passwords.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">💥 DDoS — Distributed Denial of Service Attack</div>
+      <div class="concept-block-body">Imagine a restaurant where 10,000 fake customers all walk in at the same time, sit at every table, order nothing, and block real customers from getting in. That's a DDoS attack. Attackers control thousands of compromised computers (called a botnet) and use them all simultaneously to flood a website with traffic until the server collapses under the load and legitimate users can't access it. In 2020, AWS defended against the largest DDoS attack ever recorded — 2.3 terabits per second of traffic.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">💉 SQL Injection</div>
+      <div class="concept-block-body">Websites often store data in databases and use a language called SQL to retrieve it. When a website has poor security, an attacker can type malicious SQL code into a login form instead of a username. The database might interpret it as a command and return all user records, or delete everything. This is one of the oldest and most common web attacks. The fix: always sanitize and validate input, use parameterized queries.</div>
+    </div>
+
+    <div class="section-head">Encryption — How Secrets Are Kept</div>
+    <p class="prose">Encryption converts readable data (called <strong>plaintext</strong>) into scrambled, unreadable code (called <strong>ciphertext</strong>) using a mathematical key. Only someone with the correct key can decrypt it back to plaintext. There are two main types:</p>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Symmetric Encryption — One Key</div>
+      <div class="concept-block-body">The same key is used to both lock (encrypt) and unlock (decrypt) the data. Like a physical padlock where one key both opens and closes it. Very fast. The most common algorithm is <strong>AES-256</strong> (Advanced Encryption Standard with 256-bit key). Used for: encrypting stored data (data at rest) — your phone's storage, hard drives, database records. The challenge: how do you safely share the key with someone? If you send the key over the internet, a hacker could intercept it.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Asymmetric Encryption — Two Keys</div>
+      <div class="concept-block-body">Two mathematically linked keys: a <strong>public key</strong> (can be shared with anyone) and a <strong>private key</strong> (kept secret, never shared). Anything encrypted with the public key can only be decrypted with the private key. Like a mailbox with a slot anyone can drop letters into, but only you have the key to open it. The most common algorithm is <strong>RSA</strong>. Used for: secure key exchange (so that two parties can safely agree on a symmetric key), digital signatures, HTTPS. Every time you see HTTPS, asymmetric encryption happened in the background.</div>
+    </div>
+
+    <div class="section-head">Authentication — Proving You Are Who You Say You Are</div>
+    <p class="prose"><strong>Multi-Factor Authentication (MFA)</strong> requires you to prove your identity using two or more of these three factors: Something you <strong>know</strong> (password, PIN), something you <strong>have</strong> (your phone receiving an OTP, a hardware security key), something you <strong>are</strong> (fingerprint, face scan). Even if a hacker steals your password, without your phone or fingerprint they still can't get in. This is why every important account should have MFA enabled.</p>
+    <p class="prose"><strong>Zero Trust Architecture</strong> is a modern security philosophy with a simple motto: <em>"Never trust, always verify."</em> Traditional security assumed that everything inside the company network was safe. Zero Trust assumes the opposite — even an employee's laptop inside the office must continuously prove it is authorized. Every access request is verified, every time, regardless of location.</p>
+
+    <div class="example-box">India's CERT-In (Computer Emergency Response Team India) is the national cybersecurity agency. In 2022, they issued a landmark directive: any organization operating in India must report any cybersecurity incident to CERT-In within 6 hours of detecting it. This is one of the strictest incident reporting requirements in the world. It covers banks, hospitals, IT companies, government bodies, and more.</div>
+
+    <div class="key-terms">
+      <span class="kt">CIA Triad</span><span class="kt">Confidentiality</span><span class="kt">Integrity</span><span class="kt">Availability</span><span class="kt">Phishing</span><span class="kt">Ransomware</span><span class="kt">Malware</span><span class="kt">DDoS</span><span class="kt">AES-256</span><span class="kt">RSA</span><span class="kt">MFA</span><span class="kt">Zero Trust</span><span class="kt">CERT-In</span><span class="kt">SQL Injection</span>
+    </div>
+
+    <div class="quiz-tip">
+      CIA Triad is asked in nearly every cybersecurity quiz — memorize all three with examples. Common question format: "A hospital's patient system was unavailable for 6 hours during a cyberattack" — which CIA principle was violated? Answer: Availability. Know the difference between Symmetric (AES, same key, fast, for stored data) and Asymmetric (RSA, two keys, slower, for key exchange and HTTPS). Phishing is consistently described as the #1 attack vector — this fact appears in exam questions.
+    </div>
+
+  </div>
+</div>
+
+<!-- MODULE 4 -->
+<div class="module-page" id="m4">
+  <div class="module-chapter-head" data-num="04">
+    <div class="ch-eyebrow">Module 04 of 10 · ~2.5 Hours</div>
+    <div class="ch-module-title">⛓️ Blockchain</div>
+    <div class="ch-focus-stmt">"Introduction to Decentralised Ledgers, Cryptography, and the Revolutionary Applications of distributed ledger technology."</div>
+  </div>
+  <div class="module-body">
+
+    <div class="section-head">The Problem Blockchain Solves</div>
+    <p class="prose">Let's start with a simple problem. You and your friend make a bet. You say "I'll pay you ₹1000 if India wins tomorrow's match." India wins. Now your friend claims you bet ₹2000. You say it was ₹1000. Who do you call to settle this? Normally — a bank, a lawyer, a trusted third party who has a record. <strong>The problem is: every major financial and legal system in the world depends on trusted middlemen — banks, governments, notaries, registrars.</strong> These middlemen charge fees, cause delays, can be corrupt, can make mistakes, and can be hacked.</p>
+    <p class="prose">Blockchain asks: <strong>what if we didn't need any middlemen at all?</strong> What if a record could be kept by thousands of computers simultaneously, mathematically impossible to alter, and visible to everyone — so no single person or organization controls it? That's blockchain.</p>
+
+    <div class="section-head">How a Blockchain Actually Works</div>
+    <p class="prose">The name is literal — it's a chain of blocks. Imagine a public notebook where every page is a "block" and each page is glued to the previous one in a mathematically specific way. Here's what each block contains:</p>
+
+    <div class="concept-block">
+      <div class="concept-block-title">What's Inside a Block?</div>
+      <div class="concept-block-body">
+        <strong>1. Transaction Data</strong> — The actual record. In Bitcoin: "Person A sent 0.5 Bitcoin to Person B." In a supply chain: "Package #A123 left Mumbai warehouse at 14:32." Multiple transactions are grouped into one block.<br><br>
+        <strong>2. Timestamp</strong> — Exactly when this block was created.<br><br>
+        <strong>3. The Previous Block's Hash</strong> — This is the "chain" part. A hash is a unique mathematical fingerprint. Every block contains the fingerprint of the block before it. This chains them together. If anyone tries to alter an old block, its fingerprint changes, which breaks the chain. Every computer in the network immediately notices the tampering.<br><br>
+        <strong>4. Nonce</strong> — A special number used in the mining process (explained below).<br><br>
+        <strong>5. Merkle Root</strong> — A single hash that summarizes all transactions in the block. Change any transaction, and the Merkle Root changes, which changes the block hash.
+      </div>
+    </div>
+
+    <div class="analogy-box">Imagine writing your school attendance in ink on paper and then photographing each day's sheet. You print that photo's description at the top of the next day's sheet. If someone goes back and changes the attendance for Tuesday, the photo description on Wednesday's sheet won't match anymore — everyone can see the tampering. Blockchain does this mathematically, across thousands of computers, making it essentially impossible to fake.</div>
+
+    <div class="section-head">Consensus Mechanisms — How Thousands of Computers Agree</div>
+    <p class="prose">If there's no central authority, how do thousands of independent computers all agree that a transaction is valid? This is the consensus problem. Blockchain solves it with <strong>consensus mechanisms</strong>:</p>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Proof of Work (PoW) — Used by Bitcoin</div>
+      <div class="concept-block-body">To add a new block, computers (called <strong>miners</strong>) must solve an incredibly difficult mathematical puzzle — essentially guessing a number (the nonce) that makes the block's hash meet certain criteria. This requires enormous computing power. The first miner to solve it gets to add the block and earns Bitcoin as a reward. This "work" makes it practically impossible for an attacker to rewrite history — they'd need more computing power than the entire rest of the network combined. The downside: <strong>massive energy consumption</strong>. Bitcoin mining currently uses more electricity annually than the entire country of Argentina.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Proof of Stake (PoS) — Used by Ethereum (After "The Merge" in 2022)</div>
+      <div class="concept-block-body">Instead of competing with computing power, validators are chosen to add blocks based on how much cryptocurrency they have <strong>staked</strong> (locked as collateral). Bad behavior results in losing their stake — this is called <strong>slashing</strong>. PoS uses <strong>99.95% less energy</strong> than PoW. Ethereum switched from PoW to PoS in September 2022 in a major upgrade called "The Merge." After the switch, Ethereum's energy consumption dropped overnight from about 23,000 GWh per year to just 0.01 GWh per year.</div>
+    </div>
+
+    <div class="section-head">Public, Private, and Consortium Blockchains</div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Public Blockchain — Fully Open</div>
+      <div class="concept-block-body">Anyone in the world can join, read all transactions, and participate in adding blocks. No permission needed. Fully decentralized — no single owner. Examples: Bitcoin (digital currency), Ethereum (smart contracts platform). The downside: relatively slow (Bitcoin processes ~7 transactions per second; Visa processes 24,000 per second) and everything is public.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Private Blockchain — Restricted Access</div>
+      <div class="concept-block-body">Only approved participants can join and read data. Controlled by one organization. Much faster than public blockchains because fewer nodes need to agree. Not truly decentralized. Used inside large enterprises for internal record-keeping. Example: <strong>Hyperledger Fabric</strong> (used by IBM, Walmart, Maersk for supply chain). The tradeoff: you're trusting the controlling organization, which somewhat defeats the original purpose of blockchain.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Consortium Blockchain — Shared Control</div>
+      <div class="concept-block-body">Controlled by a <strong>group of organizations</strong> rather than a single one. Access is restricted to approved members but no single organization has full control. Best for industries where multiple competing companies need to share a trusted record. Example: <strong>R3 Corda</strong> — used by 300+ banks worldwide (HSBC, Barclays, Wells Fargo) for interbank settlement. <strong>TradeLens</strong> — Maersk and IBM's blockchain for global shipping, with 175+ ports, carriers, and customs authorities sharing a single shipping record.</div>
+    </div>
+
+    <div class="section-head">Smart Contracts — Code That Enforces Agreements</div>
+    <p class="prose">A <strong>smart contract</strong> is a piece of computer code stored on a blockchain that automatically executes when specific conditions are met — with no human intervention, no middleman, no possibility of one party backing out. Think of a vending machine: you put in money, select a product, the machine automatically gives you what you paid for. No cashier needed, no argument about change. A smart contract is a vending machine for any kind of agreement.</p>
+    <p class="prose">Example: An insurance company writes a smart contract that says "If the Mumbai airport weather data shows rainfall above 50mm on the day of this flight, automatically pay the policyholder ₹5,000 within 2 minutes." The contract reads real-world weather data, checks the condition, and transfers money — all automatically, with no claims forms, no phone calls, no waiting weeks. This is how <strong>parametric insurance</strong> works in India's agriculture sector — farmers get automatically compensated when rainfall sensors detect drought conditions.</p>
+
+    <div class="example-box">India's blockchain story: Andhra Pradesh and Telangana use Hyperledger blockchain to record land ownership. Before this, land record fraud was rampant — corrupt officials would alter paper records to transfer ownership illegally. With blockchain, once a land title is recorded, it cannot be changed — the record is permanent and visible to anyone who needs to verify it. The RBI's Digital Rupee (CBDC — Central Bank Digital Currency) pilot uses blockchain principles for programmable money.</div>
+
+    <div class="key-terms">
+      <span class="kt">Block</span><span class="kt">Chain</span><span class="kt">Hash</span><span class="kt">Merkle Tree</span><span class="kt">Proof of Work</span><span class="kt">Proof of Stake</span><span class="kt">Mining</span><span class="kt">Smart Contract</span><span class="kt">Ethereum</span><span class="kt">Hyperledger</span><span class="kt">DeFi</span><span class="kt">NFT</span><span class="kt">CBDC</span><span class="kt">Public/Private/Consortium</span>
+    </div>
+
+    <div class="quiz-tip">
+      Critical clarification the quiz often tests: blockchain is NOT anonymous — it is <strong>pseudonymous</strong>. Transactions are visible to everyone; only the real identity behind an address is hidden. Know the three blockchain types and a real-world example for each. Consensus mechanism question: which is more energy-efficient — PoW or PoS? PoS (by 99.95%). Smart contract key property: self-executing, no intermediary needed. India examples: Andhra Pradesh land records, Digital Rupee pilot.
+    </div>
+
+  </div>
+</div>
+
+<!-- MODULE 5 -->
+<div class="module-page" id="m5">
+  <div class="module-chapter-head" data-num="05">
+    <div class="ch-eyebrow">Module 05 of 10 · ~1.5 Hours</div>
+    <div class="ch-module-title">⚙️ Robotic Process Automation (RPA)</div>
+    <div class="ch-focus-stmt">"Learning how to utilise software bots to automate routine, high-volume tasks for enhanced operational efficiency."</div>
+  </div>
+  <div class="module-body">
+
+    <div class="section-head">What Is RPA? (It Has Nothing to Do with Physical Robots)</div>
+    <p class="prose">When most people hear "Robotic Process Automation," they imagine a physical robot sitting at a desk, moving a mechanical arm to click a mouse. That's not what RPA is at all. <strong>RPA bots are software programs</strong> — they live entirely on a computer. They are essentially very sophisticated macros that can interact with any computer application exactly the way a human would: moving the cursor, clicking buttons, typing into fields, copying data from one application and pasting it into another, reading emails, filling out forms, downloading reports.</p>
+
+    <div class="analogy-box">Think of it like this: A new intern joins a bank. Their job for the first three months is copying customer information from emails into the bank's database system — open email, read name and account number, switch to database window, type the information in, click save, go back to email, repeat. 400 times a day. This is exactly the kind of task an RPA bot replaces. The bot does those 400 entries in 15 minutes, with zero typos, seven days a week, 24 hours a day.</div>
+
+    <div class="section-head">What Kinds of Tasks Can RPA Automate?</div>
+    <p class="prose">RPA works brilliantly for tasks that are: <strong>repetitive</strong> (done the same way every time), <strong>rule-based</strong> (clear if-then logic, no judgment calls), <strong>high-volume</strong> (done hundreds or thousands of times), and <strong>work with structured data</strong> (fixed-format inputs like spreadsheets, standard forms, databases).</p>
+    <p class="prose">Common examples: copying data between systems, processing invoices (reading invoice fields and entering them into accounting software), generating monthly reports, sending automated email notifications, checking compliance documents against a checklist, updating customer records, reconciling bank statements.</p>
+    <p class="prose"><strong>What RPA cannot do on its own:</strong> Handle unstructured data (handwritten notes, free-text emails, photos of documents), make judgment calls, understand context, or learn from experience. For these, RPA must be combined with AI — which leads us to Intelligent Automation.</p>
+
+    <div class="section-head">The Three-Part Architecture of Any RPA System</div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">1. Bot Creator / Development Studio</div>
+      <div class="concept-block-body">The tool where humans design and build the automation workflow. Most modern RPA platforms use a visual drag-and-drop interface — you don't always need to write code. You map out the steps: "Open this application → Click this field → Type this value → Click Submit." UiPath Studio, Automation Anywhere's Developer tool, and Blue Prism's Process Studio are examples. The output is a "bot" — an automation script.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">2. Bot Runner / Robot</div>
+      <div class="concept-block-body">The environment where the bot actually executes. This could be a physical computer, a virtual machine, or a cloud server. The bot runner follows the instructions built in the Studio, interacts with applications, and performs the task. One bot runner can handle one task at a time; multiple bot runners can work in parallel for higher volume.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">3. Orchestrator / Control Room</div>
+      <div class="concept-block-body">The central management platform. This is where a company schedules when bots run, monitors their performance in real-time, handles exceptions (when something unexpected happens and the bot doesn't know what to do), and maintains logs and audit trails. Think of it as the command center for the entire bot workforce. This is critical for compliance — banks and insurance companies need to prove that every automated action was logged.</div>
+    </div>
+
+    <div class="section-head">Attended vs Unattended Bots</div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Attended Bots — Working Alongside Humans</div>
+      <div class="concept-block-body">These bots live on an employee's own computer and are triggered by the employee when needed. The human and the bot work as a team. Example: A call center agent is talking to a customer. The agent triggers the bot while on the call — the bot instantly pulls up the customer's entire history from five different systems and displays it on screen. The agent gets the information in 3 seconds instead of 3 minutes of searching. The human makes the decisions; the bot does the data fetching.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Unattended Bots — Fully Autonomous</div>
+      <div class="concept-block-body">These bots run on their own, 24 hours a day, without any human pressing a button. They're scheduled to run at specific times or triggered by events. Example: Every night at 2 AM, a bot runs, downloads the day's 5,000 invoices from the email inbox, extracts the relevant data fields from each invoice, validates them against purchase orders in the ERP system, and flags mismatches for human review in the morning. The finance team arrives to a clean report instead of 5,000 emails to process manually.</div>
+    </div>
+
+    <div class="section-head">Intelligent Automation — RPA + AI</div>
+    <p class="prose">Basic RPA can only handle structured, consistent data. But what about a handwritten application form? Or an email written in natural language where the customer is asking for a refund without using a specific format? This is where <strong>Intelligent Automation</strong> (also called Cognitive RPA or Hyperautomation) comes in — it combines RPA with AI capabilities:</p>
+    <p class="prose"><strong>OCR (Optical Character Recognition)</strong> — Reads and extracts text from scanned documents and images. <strong>NLP (Natural Language Processing)</strong> — Understands the meaning of free-text emails and customer messages. <strong>Machine Learning</strong> — Learns to classify documents, detect patterns, and make decisions that basic rule-based bots can't. Together, these allow bots to handle messy, real-world data that was previously impossible to automate.</p>
+
+    <div class="example-box">India context: Infosys, TCS, and Wipro are among the world's largest implementers of RPA, deploying bots for their own operations and for global clients. SBI (State Bank of India) uses RPA for KYC document verification — a process that used to take 3 days now takes 4 hours. The Indian government's UIDAI (Aadhaar authority) uses automation for processing millions of enrollment and correction requests.</div>
+
+    <div class="key-terms">
+      <span class="kt">RPA</span><span class="kt">Bot</span><span class="kt">Orchestrator</span><span class="kt">Attended Bot</span><span class="kt">Unattended Bot</span><span class="kt">UiPath</span><span class="kt">Automation Anywhere</span><span class="kt">Blue Prism</span><span class="kt">OCR</span><span class="kt">Intelligent Automation</span><span class="kt">Hyperautomation</span><span class="kt">Workflow</span>
+    </div>
+
+    <div class="quiz-tip">
+      Key points the RPA quiz tests: RPA does NOT require changes to existing IT systems — this is a major selling point and commonly tested. RPA alone cannot handle unstructured data (needs AI). Know all 3 architecture components: Studio (build), Runner (execute), Orchestrator (manage). Attended vs Unattended — match scenario to type: "a bot runs overnight without human involvement" = Unattended; "a bot helps a customer service agent during a live call" = Attended.
+    </div>
+
+  </div>
+</div>
+
+<!-- MODULE 6 -->
+<div class="module-page" id="m6">
+  <div class="module-chapter-head" data-num="06">
+    <div class="ch-eyebrow">Module 06 of 10 · ~2 Hours</div>
+    <div class="ch-module-title">🥽 Augmented Reality &amp; Virtual Reality (AR/VR)</div>
+    <div class="ch-focus-stmt">"Exploring immersive technologies and their practical use in fields like training, entertainment, and remote collaboration."</div>
+  </div>
+  <div class="module-body">
+
+    <div class="section-head">Understanding the Difference: VR vs AR vs MR</div>
+    <p class="prose">People constantly confuse Virtual Reality, Augmented Reality, and Mixed Reality. Let's clear this up once and for all with simple language:</p>
+
+    <div class="concept-block">
+      <div class="concept-block-title">🌐 Virtual Reality (VR) — Replace Reality Entirely</div>
+      <div class="concept-block-body">You put on a headset and the entire world you see is computer-generated. The real world around you disappears completely. You're standing in your bedroom but you see yourself on top of Mount Everest, or inside a spacecraft, or in a medieval castle. VR requires a <strong>Head-Mounted Display (HMD)</strong> — a screen strapped to your face that covers your entire field of vision. The device also tracks your head movements (and sometimes your hand movements) so when you turn your head left, your virtual view also turns left, creating the illusion of presence. Examples: <strong>Meta Quest 3, PlayStation VR2, HTC Vive.</strong> The feeling of "being there" is called <strong>presence</strong> or immersion.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">📱 Augmented Reality (AR) — Add to Reality</div>
+      <div class="concept-block-body">You can still see the real world completely, but digital information is overlaid on top of it. Think of it like a transparent screen showing digital content in front of you while you look through it at reality. AR doesn't require special glasses — your smartphone camera already enables it. <strong>Pokémon GO</strong> puts cartoon characters on your real street. <strong>IKEA Place</strong> lets you point your phone at your room and see what a sofa would look like in it before buying. <strong>Google Maps Live View</strong> overlays giant arrows and street names on top of your real camera view. Snapchat filters that put cat ears on your face — that's AR. Google Lens that identifies plants, translates text in real-time, or identifies products — all AR.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">🔮 Mixed Reality (MR) — Interact With Digital Objects in Real Space</div>
+      <div class="concept-block-body">MR is an advanced version of AR where digital objects don't just float in front of you — they understand the real world around them and interact with it. A virtual ball doesn't pass through your real desk — it bounces off it. A virtual architect's model of a building sits on your real table and you can walk around it. The <strong>Microsoft HoloLens 2</strong> is the most famous MR device. Apple's <strong>Vision Pro</strong> (launched in 2024) is another. <strong>XR (Extended Reality)</strong> is the umbrella term that covers VR + AR + MR together.</div>
+    </div>
+
+    <div class="analogy-box">A spectrum helps understand the difference: Fully Real World → Augmented Reality (real + digital info overlay) → Mixed Reality (real + interactive digital objects) → Virtual Reality (fully digital world). As you move along this spectrum from left to right, less and less of the real world is present.</div>
+
+    <div class="section-head">The Technologies That Make AR and VR Possible</div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">SLAM — Simultaneous Localization and Mapping</div>
+      <div class="concept-block-body">This is the core technology that enables AR. SLAM lets a device figure out where it is in 3D space AND map the surrounding environment at the same time — simultaneously. Without SLAM, an AR app wouldn't know where to "place" a digital object in the real world. Your phone's camera feeds images to SLAM algorithms continuously, which identify feature points (corners, edges, textures) and track how they move as the camera moves to calculate position. Every AR app — from Snapchat filters to industrial AR assembly guides — runs SLAM.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">6DoF — Six Degrees of Freedom</div>
+      <div class="concept-block-body">Movement in 3D space has 6 possible degrees of freedom. <strong>Three rotational</strong>: tilting your head forward/back (pitch), turning left/right (yaw), tilting side to side (roll). <strong>Three translational</strong>: moving forward/backward, left/right, up/down. A true VR headset tracks all 6DoF — you can physically walk around in a room and the virtual world responds perfectly. Cheaper headsets might only track 3DoF (rotation only) — which causes discomfort because the virtual world doesn't respond when you lean forward.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Haptic Feedback — The Sense of Touch</div>
+      <div class="concept-block-body">Sight and sound in VR are well-solved. Touch is the next frontier. Haptic technology creates the sensation of physical touch — vibrations in a controller when you "touch" a virtual object, resistance in a haptic glove when you "grip" something virtual, or a full-body haptic suit that simulates getting hit during a virtual game. Companies like bHaptics and SenseGlove are pushing this technology forward. Haptic feedback dramatically increases the sense of presence in VR.</div>
+    </div>
+
+    <div class="section-head">The Metaverse — What Is It Really?</div>
+    <p class="prose">The Metaverse is a vision of a future internet that is <strong>persistent, shared, 3D, and immersive</strong>. Instead of browsing 2D web pages, you would enter a 3D virtual world as an avatar — attend concerts, hold business meetings, buy virtual products, play games, take classes — all in a continuous digital world that exists even when you log off. It combines VR/AR, blockchain (for owning digital assets as NFTs), AI (for intelligent virtual beings), and 5G (for the bandwidth needed). Platforms like <strong>Roblox, Meta Horizon Worlds, Decentraland,</strong> and <strong>Microsoft Mesh</strong> (for enterprise virtual meetings) are early implementations. The full vision is still being built.</p>
+
+    <div class="section-head">Where AR/VR Is Actually Being Used Today</div>
+    <p class="prose"><strong>Military Training:</strong> The US Army's IVAS (Integrated Visual Augmentation System) uses Microsoft HoloLens for soldiers to see battlefield information — enemy positions, navigation, teammate locations — overlaid on their real-world view. Training simulations in VR let soldiers experience combat scenarios without live ammunition.</p>
+    <p class="prose"><strong>Medical Education:</strong> Osso VR lets medical students practice surgeries in VR unlimited times before touching a real patient. Studies show surgeons trained in VR perform 230% better than those trained only in traditional labs. In India, Manipal Hospital uses VR for patient education — showing patients their own surgery in 3D before it happens.</p>
+    <p class="prose"><strong>Retail in India:</strong> Lenskart's AR "try-on" feature lets you see how any pair of glasses looks on your own face using your phone camera before buying. Asian Paints' ColourNext AR app lets you paint your walls virtually in any colour before opening a single tin. This reduces returns and increases customer satisfaction dramatically.</p>
+
+    <div class="key-terms">
+      <span class="kt">Virtual Reality</span><span class="kt">Augmented Reality</span><span class="kt">Mixed Reality</span><span class="kt">XR</span><span class="kt">HMD</span><span class="kt">6DoF</span><span class="kt">SLAM</span><span class="kt">Haptic</span><span class="kt">Presence</span><span class="kt">Metaverse</span><span class="kt">ARKit</span><span class="kt">ARCore</span><span class="kt">Spatial Computing</span>
+    </div>
+
+    <div class="quiz-tip">
+      The most critical distinction: VR replaces reality; AR overlays on reality; MR interacts with reality. SLAM = how AR knows where to place things in the real world — a commonly tested definition. 6DoF = 3 rotational + 3 translational axes — full physical movement tracking. Industry applications are common exam questions — know at least 2 use cases for training, healthcare, and retail. The Metaverse connection to blockchain (NFT ownership of digital assets) and 5G (bandwidth) is also tested.
+    </div>
+
+  </div>
+</div>
+
+<!-- MODULE 7 -->
+<div class="module-page" id="m7">
+  <div class="module-chapter-head" data-num="07">
+    <div class="ch-eyebrow">Module 07 of 10 · ~2.5 Hours</div>
+    <div class="ch-module-title">☁️ Cloud Computing</div>
+    <div class="ch-focus-stmt">"Core concepts of cloud services (IaaS, PaaS, SaaS), deployment models, and scalable infrastructure management."</div>
+  </div>
+  <div class="module-body">
+
+    <div class="section-head">What Is the Cloud? (And Why "The Cloud" Is Just Someone Else's Computer)</div>
+    <p class="prose">You've probably heard the joke: "There is no cloud — it's just someone else's computer." And that's partially true. <strong>Cloud computing means accessing computing resources — servers, storage, software, databases — over the internet, on demand, instead of owning and maintaining physical hardware yourself.</strong></p>
+    <p class="prose">Before cloud computing, if a startup wanted to launch a website, they had to buy physical servers, rent space in a data centre, hire IT staff to maintain them, and spend ₹50 lakh before their first customer even visited. If the website suddenly got popular and millions of visitors arrived, the servers would crash. If it had fewer visitors, the expensive servers sat idle wasting money. <strong>Cloud computing completely changed this.</strong> Now that same startup can rent computing power from Amazon Web Services for as little as ₹1,500 a month, scale up instantly when traffic grows, and pay for exactly what they use — like an electricity meter for computing.</p>
+
+    <div class="section-head">The Three Service Models: IaaS, PaaS, SaaS</div>
+    <p class="prose">This is the most important concept in cloud computing for your exam. Think of it as different levels of a restaurant:</p>
+
+    <div class="concept-block">
+      <div class="concept-block-title">IaaS — Infrastructure as a Service (You cook everything yourself)</div>
+      <div class="concept-block-body">You rent the raw computing infrastructure — servers (virtual machines), storage, networking. You are responsible for installing the operating system, setting up the databases, managing security configurations, installing software. Maximum control, maximum responsibility. Like renting a raw unfurnished flat — the walls and plumbing are there, but you bring all the furniture and set up everything yourself.<br><br>
+      Examples: <strong>Amazon EC2</strong> (virtual servers), <strong>Google Compute Engine</strong>, <strong>Microsoft Azure Virtual Machines</strong>, <strong>Amazon S3</strong> (storage). Used by: software companies building their own platforms, large enterprises needing specific configurations.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">PaaS — Platform as a Service (Kitchen and equipment provided, you cook)</div>
+      <div class="concept-block-body">The cloud provider manages the underlying infrastructure — hardware, operating system, runtime environment, database. You focus entirely on writing and deploying your application code. Like a rented commercial kitchen where everything is set up — ovens, refrigerators, prep stations — you just bring your recipes and cook.<br><br>
+      Examples: <strong>Google App Engine</strong>, <strong>Heroku</strong>, <strong>Microsoft Azure App Service</strong>, <strong>AWS Elastic Beanstalk</strong>. Used by: developers who want to build applications without managing servers.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">SaaS — Software as a Service (Walk into a restaurant, order, eat)</div>
+      <div class="concept-block-body">The complete application is delivered to you ready-to-use over the internet. You don't manage anything — no servers, no code, no databases. You just open a browser and use the software. The provider handles all maintenance, updates, and scaling.<br><br>
+      Examples: <strong>Gmail, Google Workspace, Microsoft 365, Zoom, Salesforce, Dropbox, Netflix, WhatsApp Web.</strong> This is what most end-users interact with. The entire consumer internet is essentially SaaS.</div>
+    </div>
+
+    <div class="analogy-box">Think of pizza: IaaS = supermarket gives you raw dough, cheese, and tomato — you make the whole pizza yourself. PaaS = restaurant gives you raw ingredients already prepped — you assemble and bake. SaaS = pizza delivered to your door, hot, ready to eat — you just enjoy it.</div>
+
+    <div class="section-head">Deployment Models — Where Does Your Cloud Live?</div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Public Cloud</div>
+      <div class="concept-block-body">Infrastructure owned and operated by a cloud provider, shared by many customers simultaneously (multi-tenancy). Accessed over the public internet. Cheapest option — you're sharing costs with thousands of other customers. <strong>AWS, Microsoft Azure, Google Cloud Platform</strong> are the "Big Three." AWS currently has about 32% global market share. Most startups and SMEs use public cloud.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Private Cloud</div>
+      <div class="concept-block-body">Cloud infrastructure dedicated to and operated for a single organization. Could be on-premise (in the company's own data centre) or hosted by a third party but kept separate. Much more expensive than public cloud but offers maximum control, customization, and data privacy. Used by: banks with strict data sovereignty requirements, defence organizations, hospitals with patient data regulations. India's government workloads run on NIC Cloud (National Informatics Centre's private cloud).</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Hybrid Cloud</div>
+      <div class="concept-block-body">A combination of public and private cloud. Sensitive or regulated data stays on private cloud; applications that need to scale massively run on public cloud. Example: A hospital keeps patient records on its private cloud (for data privacy compliance) but runs its public-facing appointment booking website on AWS public cloud (for flexibility and cost). The two are connected by a secure network link.</div>
+    </div>
+
+    <div class="section-head">Virtualization and Containers — The Engine Inside the Cloud</div>
+    <p class="prose">How can one physical server in Amazon's data centre simultaneously serve thousands of different customers? The answer is <strong>virtualization</strong>. A piece of software called a <strong>hypervisor</strong> divides one physical server into multiple completely isolated virtual machines (VMs), each thinking it's a dedicated physical machine. VMware, Microsoft Hyper-V, and KVM are common hypervisors.</p>
+    <p class="prose"><strong>Containers</strong> (Docker) are a lighter-weight evolution of VMs. Instead of virtualizing the entire hardware, containers share the host operating system but keep applications isolated from each other. They start in seconds, use far less memory, and are highly portable — a container runs the same way on any machine. <strong>Kubernetes</strong> (K8s) is the system that manages thousands of containers across many servers — scheduling them, restarting them if they fail, and scaling them up or down automatically. Kubernetes is now the backbone of how every major cloud application runs.</p>
+
+    <div class="example-box">JioCinema streaming the IPL 2023 cricket matches: 32 million people watched simultaneously — a world record for live streaming. This was only possible because JioCinema ran on Google Cloud, which automatically scaled their infrastructure from handling a few thousand viewers in the morning to 32 million during the match, then scaled back down after the game — paying only for what they used. On traditional servers, they would have needed to buy hardware for 32 million simultaneous users that would sit completely idle 90% of the time.</div>
+
+    <div class="key-terms">
+      <span class="kt">IaaS</span><span class="kt">PaaS</span><span class="kt">SaaS</span><span class="kt">Public Cloud</span><span class="kt">Private Cloud</span><span class="kt">Hybrid Cloud</span><span class="kt">Hypervisor</span><span class="kt">VM</span><span class="kt">Docker</span><span class="kt">Kubernetes</span><span class="kt">Autoscaling</span><span class="kt">Serverless</span><span class="kt">CDN</span><span class="kt">IAM</span>
+    </div>
+
+    <div class="quiz-tip">
+      IaaS/PaaS/SaaS is the most frequently tested cloud concept — know a real example for each and the level of responsibility you take on. The pizza analogy works very well in memory. Cloud market share: AWS &gt; Azure &gt; GCP. India-specific: MeitY has empanelled cloud providers for government use. The NIST 5 characteristics of cloud (on-demand self-service, broad network access, resource pooling, rapid elasticity, measured service) are sometimes tested — particularly "rapid elasticity" meaning scale up/down instantly.
+    </div>
+
+  </div>
+</div>
+
+<!-- MODULE 8 -->
+<div class="module-page" id="m8">
+  <div class="module-chapter-head" data-num="08">
+    <div class="ch-eyebrow">Module 08 of 10 · ~2 Hours</div>
+    <div class="ch-module-title">🖨️ 3D Printing &amp; Modeling</div>
+    <div class="ch-focus-stmt">"Fundamentals of additive manufacturing, design processes, and rapid prototyping applications."</div>
+  </div>
+  <div class="module-body">
+
+    <div class="section-head">Building Things Layer by Layer</div>
+    <p class="prose">Every physical object you own was made in one of two ways. Either material was <strong>removed</strong> from a larger block — like a sculptor carving a statue from stone, or a machinist cutting metal on a lathe (this is called <strong>subtractive manufacturing</strong>). Or material was <strong>added together</strong> — like a potter building a clay pot by stacking rings of clay (this is called <strong>additive manufacturing</strong>).</p>
+    <p class="prose"><strong>3D printing is additive manufacturing</strong> using digital control. A computer-designed 3D model is "sliced" into thousands of extremely thin horizontal layers — like slicing a loaf of bread. Then a 3D printer builds the object one layer at a time from the bottom up, depositing or solidifying material according to the digital blueprint. The result, after hundreds or thousands of layers, is a complete 3D physical object. <strong>Any shape that can be designed on a computer can theoretically be printed.</strong> This unlocks geometries that are simply impossible to make any other way — hollow lattices inside solid structures, internal channels that snake in any direction, complex organic curves that would take days to machine traditionally.</p>
+
+    <div class="section-head">The Main Types of 3D Printing Technology</div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">FDM — Fused Deposition Modeling (The Most Common Type)</div>
+      <div class="concept-block-body">A plastic filament (like a long thin string of plastic on a spool) is fed into a heated nozzle. The nozzle melts the plastic and deposits it in precise lines to form each layer. The layer cools and solidifies, then the nozzle moves up slightly and prints the next layer on top. The plastic used is usually <strong>PLA</strong> (biodegradable, easy to print, great for beginners — made from cornstarch), <strong>ABS</strong> (stronger, used in LEGO bricks, resistant to heat), <strong>PETG</strong> (flexible and strong, used for food-safe containers), or <strong>Nylon</strong> (very strong, used for functional parts). FDM printers range from ₹10,000 (hobby) to ₹50 lakh (industrial). The Prusa i3, Bambu Lab X1, and Creality Ender 3 are popular models. Best for: prototypes, hobby models, mechanical parts, educational tools.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">SLA — Stereolithography (The High-Detail Type)</div>
+      <div class="concept-block-body">Instead of plastic filament, SLA uses a tank of liquid photopolymer resin. A UV laser (or masked LCD screen in cheaper versions called MSLA) shines through the bottom of the tank, curing (hardening) each layer of resin in the exact shape of the design. The build platform lifts up after each layer, pulling the hardening model up out of the resin. SLA achieves detail as fine as 25 microns — human hair is 70 microns thick. <strong>Resolution so high that dental labs print crowns and retainers directly from SLA printers.</strong> After printing, parts must be washed in IPA alcohol and then cured under UV light. Best for: dental models, jewelry prototypes, miniatures, medical devices.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">SLS — Selective Laser Sintering (The Strong Part Type)</div>
+      <div class="concept-block-body">A high-powered laser fuses (sinters) powder — usually Nylon 12 — layer by layer. No support structures needed because the surrounding unsintered powder supports the part during printing. This means you can print extremely complex geometries, interlocking parts, moving joints — all in one print. Parts are strong, isotropic (equally strong in all directions), and functional. Used for actual end-use products, not just prototypes. SLS machines are expensive (₹50 lakh to several crore) — mostly used by industrial manufacturers and service bureaus.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Metal 3D Printing — DMLS/SLM (The Aerospace Type)</div>
+      <div class="concept-block-body">Uses a high-powered fiber laser to melt metal powder (titanium, Inconel, stainless steel, aluminium, cobalt-chrome) layer by layer in an inert gas atmosphere. The result is fully dense metal parts with mechanical properties comparable or superior to traditionally machined parts. Enables geometries impossible to machine — internal cooling channels in turbine blades, latticed structures that are lighter than solid metal but equally strong. <strong>GE's LEAP jet engine fuel nozzle</strong> is the most famous example: 3D printed from cobalt-chrome, it's 25% lighter than the previous machined version, 5x more durable, and consolidates 20 separate parts into a single printed piece.</div>
+    </div>
+
+    <div class="section-head">The 3D Printing Workflow: From Idea to Object</div>
+    <p class="prose"><strong>Step 1 — Design:</strong> Create a 3D model using CAD (Computer-Aided Design) software. Parametric CAD like <strong>Fusion 360</strong> or <strong>SolidWorks</strong> is used for engineering parts (precise dimensions, tolerances). Sculpting software like <strong>Blender</strong> or <strong>ZBrush</strong> is used for organic artistic shapes. Alternatively, download free models from <strong>Thingiverse</strong> (millions of free printable models) or scan a real object using a 3D scanner.</p>
+    <p class="prose"><strong>Step 2 — Export:</strong> Save the 3D model as an <strong>STL file</strong> (Standard Tessellation Language) — the universal format that describes the surface geometry of a 3D model as millions of tiny triangles. Most modern printers also accept OBJ and 3MF formats.</p>
+    <p class="prose"><strong>Step 3 — Slice:</strong> Import the STL file into <strong>slicing software</strong> (Cura, PrusaSlicer, Bambu Studio). The slicer cuts the model into hundreds of layers, calculates the print path for each layer, sets parameters (layer height, print speed, infill pattern and density, support structures), and converts everything into <strong>G-code</strong> — the machine instruction language that tells the printer exactly where to move and when to extrude.</p>
+    <p class="prose"><strong>Step 4 — Print:</strong> Send the G-code to the printer and let it run. Depending on size and complexity, a print can take 30 minutes (a small keychain) to 3 days (a large architectural model). You can watch the layers build up in real-time.</p>
+    <p class="prose"><strong>Step 5 — Post-process:</strong> Remove the part, peel off support structures, sand rough surfaces, paint or finish as needed. Metal prints require stress-relief heat treatment and machining of precision surfaces.</p>
+
+    <div class="section-head">Bioprinting — The Most Mind-Blowing Application</div>
+    <p class="prose"><strong>Bioprinting</strong> uses living cells suspended in a gel-like material called <strong>bioink</strong> to print biological structures. Instead of plastic or metal, you're printing with human cells. Researchers have successfully bioprinted human skin (for burn treatment), cartilage, blood vessel segments, and even mini functional kidneys and livers for drug testing. The ultimate goal — printing a fully functional transplantable human heart — is still years away, but bioprinting has already produced corneas, heart patches for cardiac repair, and spinal cord components in laboratory settings. This is not science fiction — it's happening in research labs right now.</p>
+
+    <div class="example-box">India's 3D printing moment: In 2023, CSIR-CBRI and Larsen & Toubro 3D printed India's first government building — a post office in Bengaluru — using a large gantry printer and special concrete formulation. The structure was printed in 5 days, compared to months for traditional construction. Atal Tinkering Labs across 10,000+ Indian schools now have FDM 3D printers — students design and print everything from prosthetic fingers to working model bridges.</div>
+
+    <div class="key-terms">
+      <span class="kt">Additive Manufacturing</span><span class="kt">FDM</span><span class="kt">SLA</span><span class="kt">SLS</span><span class="kt">DMLS</span><span class="kt">PLA</span><span class="kt">ABS</span><span class="kt">STL File</span><span class="kt">G-Code</span><span class="kt">Slicer</span><span class="kt">CAD</span><span class="kt">Infill</span><span class="kt">Support Structures</span><span class="kt">Bioprinting</span><span class="kt">Rapid Prototyping</span>
+    </div>
+
+    <div class="quiz-tip">
+      Know the fundamental difference: Additive manufacturing adds material; Subtractive manufacturing removes material. Technology matching is the most common question type: FDM = affordable plastic parts, SLA = high-detail resin parts, SLS = strong no-support parts, DMLS = metal aerospace parts. Know the workflow: Design (CAD) → Export (STL) → Slice (G-code) → Print → Post-process. Bioprinting (living cells + bioink) is a high-probability question for its dramatic future applications. DfAM (Design for Additive Manufacturing) principle: design specifically to take advantage of 3D printing's freedom — lattices, internal channels, consolidated parts.
+    </div>
+
+  </div>
+</div>
+
+<!-- MODULE 9 -->
+<div class="module-page" id="m9">
+  <div class="module-chapter-head" data-num="09">
+    <div class="ch-eyebrow">Module 09 of 10 · ~2 Hours</div>
+    <div class="ch-module-title">🌐 Web, Mobile Development &amp; Digital Marketing</div>
+    <div class="ch-focus-stmt">"Basic concepts of digital presence, web development frameworks, and foundational Digital Marketing strategies."</div>
+  </div>
+  <div class="module-body">
+
+    <div class="section-head">The Building Blocks of Every Website You've Ever Visited</div>
+    <p class="prose">Every single website on the internet — from Google to the tiniest blog — is built using three core technologies that work together like a construction team: HTML is the architect, CSS is the interior designer, and JavaScript is the electrician who makes everything interactive.</p>
+
+    <div class="concept-block">
+      <div class="concept-block-title">HTML — HyperText Markup Language (The Structure)</div>
+      <div class="concept-block-body">HTML is the skeleton — the structure and content of a web page. It defines what is on the page: headings, paragraphs, images, links, tables, buttons, forms. HTML uses tags wrapped in angle brackets: &lt;h1&gt;This is a big heading&lt;/h1&gt;, &lt;p&gt;This is a paragraph.&lt;/p&gt;. Every webpage is an HTML document. Without HTML, there is no webpage. HTML is not a programming language — it's a markup language, it just describes content structure.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">CSS — Cascading Style Sheets (The Appearance)</div>
+      <div class="concept-block-body">CSS controls how the HTML looks — colors, fonts, sizes, spacing, layout, animations. Without CSS, every website would be plain black text on white background. CSS separates the design from the content, making it easy to change the look of an entire website by changing one CSS file. CSS makes websites <strong>responsive</strong> — it can change the layout depending on screen size, so the same website looks great on both a large desktop monitor and a small mobile screen.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">JavaScript (JS) — The Interactivity</div>
+      <div class="concept-block-body">JavaScript makes web pages come alive — it handles all the interactivity. When you click a "Load More" button and new content appears without the page reloading, that's JavaScript. When a dropdown menu opens when you hover, when a form validates your email before you submit, when a Google Maps marker moves — all JavaScript. Unlike HTML and CSS, JavaScript is a real programming language — it can do calculations, make decisions, store data, and communicate with servers in the background without reloading the page (this is called AJAX — Asynchronous JavaScript and XML).</div>
+    </div>
+
+    <div class="section-head">Frontend vs Backend — What They Mean</div>
+    <p class="prose">Web development is split into two sides. <strong>Frontend</strong> (also called client-side) is everything the user sees and interacts with directly in their browser — HTML, CSS, JavaScript. <strong>Backend</strong> (server-side) is everything happening behind the scenes on the server — the database, business logic, authentication, payment processing. When you log into a website, your browser sends your username and password to the backend server, which checks it against the database and sends back "allowed" or "denied."</p>
+    <p class="prose"><strong>Frontend frameworks</strong> make building complex interactive UIs faster: <strong>React.js</strong> (built by Meta/Facebook, most popular today, used by Instagram, Airbnb, Netflix), <strong>Angular</strong> (built by Google, used for large enterprise applications), <strong>Vue.js</strong> (lighter weight, easier to learn, popular in Asia). <strong>Backend technologies:</strong> <strong>Node.js</strong> (JavaScript on the server, very fast, used by LinkedIn, Netflix), <strong>Python + Django/Flask</strong> (popular for AI-integrated backends, used by Instagram, Spotify), <strong>Java + Spring Boot</strong> (enterprise grade, used by banks and large corporates).</p>
+
+    <div class="section-head">Mobile Development — Native vs Cross-Platform</div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Native Development</div>
+      <div class="concept-block-body">Building a completely separate app for each platform using the platform's official language. <strong>iOS: Swift</strong> (Apple's language, replaced Objective-C). <strong>Android: Kotlin</strong> (officially recommended by Google, replaced Java). Native apps have the best performance, smoothest animations, full access to device hardware (camera, sensors, NFC), and follow each platform's design guidelines perfectly. But you need two different teams and codebases for one app — double the cost and effort.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Cross-Platform Development — Write Once, Run Everywhere</div>
+      <div class="concept-block-body"><strong>Flutter</strong> (Google, uses Dart language): Write one codebase that runs on iOS, Android, web, desktop, and even embedded devices. Flutter compiles to native code so performance is very close to native. Used by PhonePe, Google Pay, Alibaba, BMW. Growing extremely rapidly — now the most popular cross-platform framework. <strong>React Native</strong> (Meta/Facebook, uses JavaScript): Also cross-platform, shares code between iOS and Android. Instagram, Facebook, Airbnb, and Discord have used React Native. Older and more mature ecosystem than Flutter, but Flutter is rapidly overtaking it.</div>
+    </div>
+
+    <div class="section-head">APIs — How Apps Talk to Each Other</div>
+    <p class="prose">An API (Application Programming Interface) is a set of rules that lets two applications communicate and share data with each other. When you click "Login with Google" on a website, that website is using Google's API to ask Google to verify your identity. When a food delivery app shows you real-time traffic data, it's using Google Maps API. When you pay on a website, it uses Razorpay's or Stripe's payment API. <strong>REST APIs</strong> are the most common — they use standard HTTP methods: GET (retrieve data), POST (create data), PUT (update data), DELETE (remove data), and exchange data in JSON format. Virtually every major digital service exposes a REST API.</p>
+
+    <div class="section-head">Digital Marketing — Making People Find You and Trust You Online</div>
+    <p class="prose"><strong>SEO (Search Engine Optimization)</strong> is the practice of making your website appear higher in Google's search results without paying for ads. When someone searches "best biryani in Trivandrum," Google's algorithm ranks thousands of websites. SEO is the art and science of making Google prefer your site. Key factors: quality and relevance of content, page loading speed, mobile-friendliness, number of other websites linking to yours (backlinks), proper use of keywords, and clear website structure.</p>
+    <p class="prose"><strong>SEM / PPC (Paid Search)</strong> is paying Google to show your ad at the top of search results for specific keywords. You set a bid for how much you'll pay each time someone clicks your ad — hence Pay-Per-Click. Results are immediate, unlike SEO which takes months. Google Ads is the dominant platform.</p>
+    <p class="prose"><strong>Key Digital Marketing Metrics you must know:</strong></p>
+
+    <div class="concept-block">
+      <div class="concept-block-title">Digital Marketing Metrics Explained Simply</div>
+      <div class="concept-block-body">
+        <strong>Impressions</strong> — How many times your ad was shown. 10,000 impressions means 10,000 people saw your ad.<br><br>
+        <strong>CTR (Click-Through Rate)</strong> = (Clicks ÷ Impressions) × 100. If your ad was shown 1,000 times and 50 people clicked it, CTR = 5%. Average CTR for Google Ads is about 3-5%. Higher CTR = your ad is compelling.<br><br>
+        <strong>CPC (Cost Per Click)</strong> = Total Spend ÷ Clicks. If you spent ₹10,000 on ads that got 500 clicks, CPC = ₹20 per click.<br><br>
+        <strong>Conversion Rate</strong> = (Conversions ÷ Visitors) × 100. If 1,000 people visited your website and 30 bought something, Conversion Rate = 3%.<br><br>
+        <strong>CAC (Customer Acquisition Cost)</strong> = Total Marketing Spend ÷ New Customers Acquired. If you spent ₹1,00,000 and got 50 new customers, CAC = ₹2,000 per customer. Compare this to the lifetime value of a customer to know if your marketing is profitable.<br><br>
+        <strong>ROAS (Return on Ad Spend)</strong> = Revenue from Ads ÷ Ad Spend. ROAS of 4 means for every ₹1 spent on ads, you earned ₹4 back.
+      </div>
+    </div>
+
+    <div class="example-box">India's mobile-first internet: India has 750 million smartphone users, and over 70% of all web traffic in India comes from mobile phones. This is why every serious Indian digital business designs for mobile first. PhonePe (built on Flutter) processes 50% of all UPI transactions. Meesho (social commerce, 120 million users) is designed entirely around how people in Tier 2 and Tier 3 cities use their phones — WhatsApp sharing, voice-first features, vernacular languages.</div>
+
+    <div class="key-terms">
+      <span class="kt">HTML</span><span class="kt">CSS</span><span class="kt">JavaScript</span><span class="kt">Frontend</span><span class="kt">Backend</span><span class="kt">React.js</span><span class="kt">Flutter</span><span class="kt">React Native</span><span class="kt">REST API</span><span class="kt">JSON</span><span class="kt">SEO</span><span class="kt">SEM</span><span class="kt">CTR</span><span class="kt">CPC</span><span class="kt">ROAS</span><span class="kt">Conversion Rate</span>
+    </div>
+
+    <div class="quiz-tip">
+      HTML/CSS/JS roles are commonly tested — which language handles structure? (HTML). Which handles interactivity? (JavaScript). Native vs Cross-Platform trade-off: Native = best performance, two codebases. Cross-platform = one codebase, slightly less performance. Flutter uses Dart; React Native uses JavaScript. Metric calculation questions appear: "An ad got 2,000 impressions and 60 clicks — what is the CTR?" = (60/2000)×100 = 3%. Know all 5 key metrics: CTR, CPC, Conversion Rate, CAC, ROAS.
+    </div>
+
+  </div>
+</div>
+
+<!-- MODULE 10 -->
+<div class="module-page" id="m10">
+  <div class="module-chapter-head" data-num="10">
+    <div class="ch-eyebrow">Module 10 of 10 · ~1 Hour</div>
+    <div class="ch-module-title">⚖️ Responsible AI</div>
+    <div class="ch-focus-stmt">"Critical understanding of the ethical considerations, fairness, transparency, and governance needed for developing and deploying AI systems."</div>
+  </div>
+  <div class="module-body">
+
+    <div class="section-head">Why "Responsible AI" Is Not Just a Nice Idea</div>
+    <p class="prose">In 2018, Amazon built an AI hiring tool to help screen the hundreds of thousands of job applications they receive every year. They trained it on 10 years of past hiring decisions. The problem? For 10 years, Amazon (like most tech companies) had hired far more men than women. The AI learned from this biased history and started automatically downgrading applications from women — flagging women's colleges, penalizing resumes that mentioned "women's chess club." Amazon discovered the bias and scrapped the tool entirely. <strong>This is a real story about a real consequence of irresponsible AI.</strong></p>
+    <p class="prose">AI systems are making decisions that affect human lives every day — approving or rejecting loan applications, recommending medical treatments, predicting who might commit a crime, deciding whose face is allowed through airport security, selecting which children get into which schools. If these systems are flawed, biased, or opaque, the consequences fall on real people. This is why Responsible AI is not optional — it's essential.</p>
+
+    <div class="section-head">The Four Pillars of Responsible AI</div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">1. Fairness — AI Should Not Discriminate</div>
+      <div class="concept-block-body">AI systems learn from historical data. If that historical data reflects human prejudices — racial bias in criminal justice, gender bias in hiring, caste discrimination in credit — the AI will learn and amplify those prejudices. <strong>Types of bias:</strong><br><br>
+      <strong>Historical Bias</strong> — The training data itself reflects past discrimination. The Amazon hiring AI is a perfect example. COMPAS (a US criminal justice tool used to predict recidivism — likelihood of reoffending) was shown to incorrectly flag Black defendants as high-risk at nearly twice the rate of white defendants with similar criminal histories.<br><br>
+      <strong>Representation Bias</strong> — Some groups are underrepresented in training data. Facial recognition AI was trained primarily on lighter-skinned faces. MIT researcher Joy Buolamwini found that commercial facial recognition systems from IBM, Microsoft, and Amazon had error rates of up to 35% for darker-skinned women, compared to less than 1% error for lighter-skinned men.<br><br>
+      <strong>Measurement Bias</strong> — Using an inaccurate proxy variable. Using a zip code as a proxy for income (when zip codes also correlate with race) introduces racial bias even without intending to.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">2. Transparency &amp; Explainability — Can We Understand Why?</div>
+      <div class="concept-block-body">When an AI decides to reject your loan application, you deserve to know why. When an AI recommends a cancer treatment, the doctor needs to understand the reasoning to trust it. But many modern AI systems — especially deep neural networks — are <strong>black boxes</strong>: they give an answer but cannot explain their reasoning in human-understandable terms. The field of <strong>XAI (Explainable AI)</strong> is working on this problem.<br><br>
+      <strong>LIME (Local Interpretable Model-agnostic Explanations)</strong> — A technique that explains individual predictions by building a simple local model around one specific decision. It can tell you "this loan was rejected primarily because the monthly income-to-debt ratio was too high."<br><br>
+      <strong>SHAP (SHapley Additive exPlanations)</strong> — Assigns each input feature a "contribution score" to the final prediction. Like a salary breakdown — 60% due to this factor, 20% due to that factor. Both tools make black-box AI more explainable and trustworthy.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">3. Privacy — AI Needs Data But Data Can Harm</div>
+      <div class="concept-block-body">Training AI requires enormous amounts of data — often personal data. This creates serious privacy risks. Two important privacy-preserving techniques:<br><br>
+      <strong>Federated Learning</strong> — Instead of collecting all user data to a central server, the AI model is sent to each user's device. The model trains on that device using local data. Only the model improvements (gradients) — not the raw data — are sent back to the server and aggregated. Your personal data never leaves your phone. <strong>Google uses Federated Learning to train the Gboard keyboard's next-word predictions</strong> — the model improves from millions of users' typing without Google ever seeing what anyone typed.<br><br>
+      <strong>Differential Privacy</strong> — Mathematical noise is added to data before analysis, so the output statistics can tell you about population-level trends without revealing any individual's data. <strong>Apple uses Differential Privacy</strong> to collect usage statistics from iPhones without being able to identify what any individual user did.</div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-block-title">4. Accountability — Who Is Responsible When AI Goes Wrong?</div>
+      <div class="concept-block-body">When an autonomous vehicle kills a pedestrian, who is responsible — the passenger, the manufacturer, the software company, the city that approved it? When an AI hiring tool discriminates, who is legally liable — the company that built it, or the company that used it? These are not hypothetical questions — they are live legal debates. Accountability requires: keeping clear logs of AI decisions, having human oversight for high-stakes decisions, clear assignment of responsibility in the supply chain, and the ability to audit AI systems. The principle of <strong>"human in the loop"</strong> — ensuring a human can review and override AI decisions in critical situations — is a cornerstone of responsible deployment.</div>
+    </div>
+
+    <div class="section-head">The EU AI Act — The World's First Comprehensive AI Law</div>
+    <p class="prose">The <strong>European Union AI Act</strong>, finalized in 2024, is the world's first comprehensive legal framework for artificial intelligence. It classifies AI systems into four risk tiers:</p>
+
+    <div class="concept-block">
+      <div class="concept-block-title">EU AI Act — Four Risk Tiers</div>
+      <div class="concept-block-body">
+        <strong>Unacceptable Risk (BANNED):</strong> AI systems that are simply too dangerous and are completely prohibited. Examples: social credit scoring systems (like China's system that rates citizens and restricts their freedoms), real-time biometric surveillance of people in public spaces by law enforcement, subliminal manipulation to influence behavior, and AI that exploits children or vulnerable people.<br><br>
+        <strong>High Risk (STRICTLY REGULATED):</strong> AI used in critical applications that could seriously harm people if they fail. Must meet strict requirements for transparency, testing, human oversight, and documentation. Examples: AI in hiring and HR (like Amazon's failed tool), AI in medical devices (radiology AI), AI in justice systems (criminal risk assessment), AI in critical infrastructure (power grids, water systems), AI in educational assessment.<br><br>
+        <strong>Limited Risk (DISCLOSURE REQUIRED):</strong> Must tell users they are interacting with AI. Examples: chatbots (you must know you're not talking to a human), deepfake videos (must be labeled as AI-generated), AI that generates text or images.<br><br>
+        <strong>Minimal Risk (NO RESTRICTIONS):</strong> AI with negligible risk. Examples: AI spam filters, AI in video games, AI-powered Netflix recommendations.
+      </div>
+    </div>
+
+    <div class="section-head">India's AI Policy</div>
+    <p class="prose">India does not yet have a comprehensive AI law like the EU AI Act, but significant policy is being developed. <strong>NITI Aayog's "Responsible AI for All" (2021)</strong> framework outlines 7 principles: Safety and Reliability, Equality, Inclusivity and non-discrimination, Privacy and security, Transparency, Accountability, and Protection of positive human values. The <strong>IndiaAI Mission (2024)</strong>, with a budget of ₹10,372 crore, focuses on building sovereign AI compute infrastructure (10,000+ GPU cluster), national datasets for training Indian AI, supporting AI startups, and establishing a "Safe and Trusted AI" framework specifically designed for India's diverse and complex social context.</p>
+
+    <div class="section-head">Deepfakes and AI-Generated Misinformation</div>
+    <p class="prose"><strong>Deepfakes</strong> are AI-generated videos, images, or audio that make real people appear to say or do things they never said or did. The technology has advanced to the point where a convincing deepfake video of any public figure can be created in minutes using freely available AI tools. In 2024 India elections, deepfake videos of politicians making statements they never made circulated widely on WhatsApp. Deepfake audio scams have tricked employees into transferring crores of rupees thinking their CEO called them. The EU AI Act requires all deepfake content to be clearly labeled as AI-generated. India's IT Ministry has issued advisories requiring social media platforms to detect and label deepfakes.</p>
+
+    <div class="key-terms">
+      <span class="kt">Responsible AI</span><span class="kt">Bias</span><span class="kt">Fairness</span><span class="kt">XAI</span><span class="kt">Explainability</span><span class="kt">LIME</span><span class="kt">SHAP</span><span class="kt">Federated Learning</span><span class="kt">Differential Privacy</span><span class="kt">Accountability</span><span class="kt">EU AI Act</span><span class="kt">Deepfake</span><span class="kt">IndiaAI Mission</span><span class="kt">Human in the Loop</span>
+    </div>
+
+    <div class="quiz-tip">
+      The four pillars of Responsible AI — Fairness, Transparency, Accountability, Privacy — are the most tested framework. Know all 4. EU AI Act 4 risk tiers with examples for each is a high-probability question — especially the "Unacceptable Risk" category (banned uses). Federated Learning key point: data never leaves the device. SHAP and LIME = tools for making black-box AI explainable. The Amazon hiring AI bias story is referenced often as a real-world example. IndiaAI Mission (2024) budget of ₹10,372 crore is a specific fact that appears in questions.
+    </div>
+
+  </div>
+</div>
+
+<div style="height:60px"></div>
+
+</div><!-- end page-wrap -->
+
+<button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script>
-const modules = [
-  {
-    id:"m1", num:"01", icon:"🤖",
-    title:"AI & Big Data Analytics",
-    short:"AI/BDA",
-    focus:"Focus on the principles of Artificial Intelligence, Machine Learning concepts, and leveraging Big Data for business insights.",
-    pathways:["Intro to AI & its History","Machine Learning Fundamentals","Deep Learning & Neural Networks","NLP & Computer Vision","Big Data: 5Vs & Architecture","Analytics Types & Business Insights"],
-    overview:"Artificial Intelligence enables machines to learn from experience and perform tasks that traditionally required human intelligence. Combined with Big Data Analytics — the process of processing and interpreting massive, diverse datasets — AI has become the most transformative technology of the 21st century. From predicting diseases to powering recommendation engines, AI and BDA are reshaping every industry globally and in India.",
-    concepts:[
-      {t:"Artificial Intelligence (AI)",d:"Simulation of human intelligence by machines. Narrow AI handles specific tasks (face recognition, spam detection). General AI (theoretical) would have broad human-like reasoning. Powered by data, algorithms, and compute."},
-      {t:"Machine Learning (ML)",d:"Subset of AI. Systems learn from data without being explicitly programmed. Supervised (labeled data → predict), Unsupervised (find hidden patterns), Reinforcement Learning (reward-based trial and error)."},
-      {t:"Deep Learning & Neural Networks",d:"Subset of ML with multi-layered neural networks inspired by the brain. Powers image recognition, voice assistants, language models. Requires large data and GPU compute."},
-      {t:"Natural Language Processing (NLP)",d:"Enables machines to understand and generate human language. Used in ChatGPT, Alexa, Google Translate, and sentiment analysis tools."},
-      {t:"Big Data — The 5 Vs",d:"Volume (scale: petabytes), Velocity (speed: real-time streams), Variety (formats: structured, unstructured, semi-structured), Veracity (data quality), Value (business insights extracted)."},
-      {t:"Four Analytics Types",d:"Descriptive (what happened — dashboards), Diagnostic (why it happened — root cause analysis), Predictive (what will happen — ML models), Prescriptive (what action to take — optimization algorithms)."}
-    ],
-    apps:[
-      "Healthcare: AI reads chest X-rays for TB detection — ICMR pilots across 100+ Indian hospitals",
-      "Finance: ML-based real-time fraud detection on 10 billion+ monthly UPI transactions (NPCI)",
-      "Retail: Amazon/Netflix recommendation engines — 35% of revenue from AI-powered suggestions",
-      "Agriculture: Plantix app uses image AI to detect 400+ crop diseases from smartphone photos",
-      "Smart Cities: Big Data optimizes Bengaluru traffic signals reducing commute times by 20%",
-      "HR: AI resume screening at Infosys, TCS, Wipro — processing millions of applications annually"
-    ],
-    terms:["Neural Network","Training Data","Supervised Learning","Overfitting","Hadoop","Apache Spark","Data Lake","ETL","Predictive Model","Computer Vision"],
-    quiz:"AI & Big Data Analytics Quiz",
-    quizDesc:"Tests your understanding of ML types, the 5 Vs of Big Data, analytics categories, and AI applications across industries. Expect scenario-based questions matching technology to use cases.",
-    exam:"Know the nested relationship: AI ⊃ ML ⊃ Deep Learning. All 5 Vs of Big Data are directly tested. Match each analytics type to a real example. India focus: NITI Aayog National AI Strategy — 5 focus sectors: healthcare, agriculture, education, smart cities, and smart mobility."
-  },
-  {
-    id:"m2", num:"02", icon:"📡",
-    title:"Internet of Things",
-    short:"IoT",
-    focus:"Understanding the network of connected devices, data flow, and building smart ecosystems.",
-    pathways:["IoT Fundamentals & Architecture","Sensors, Actuators & Connectivity","IoT Communication Protocols","Edge Computing & Fog Computing","IoT Security & Privacy","Smart Ecosystems: Cities, Health & Industry"],
-    overview:"IoT is the network of physical devices embedded with sensors, software, and connectivity that collect and exchange data without human interaction. IoT bridges the physical and digital worlds — turning factories, farms, hospitals, and homes into intelligent, data-generating ecosystems. India's Smart Cities Mission and Industrial IoT initiatives make this a critical domain for ECE engineers.",
-    concepts:[
-      {t:"IoT 4-Layer Architecture",d:"Perception Layer (sensors/actuators collect physical data) → Network Layer (WiFi, Bluetooth, 5G, LoRaWAN transmit data) → Processing Layer (edge/cloud analytics) → Application Layer (dashboards, automation, alerts)."},
-      {t:"Sensors & Actuators",d:"Sensors: detect physical quantities (temperature, motion, light, pressure, gas) and convert to digital signals. Actuators: receive digital commands and perform physical actions (opening a valve, adjusting a motor, triggering an alarm)."},
-      {t:"Communication Protocols",d:"MQTT: lightweight pub-sub protocol, ideal for constrained IoT devices. CoAP: RESTful protocol for low-power devices. Zigbee/Z-Wave: short-range mesh for smart homes. LoRaWAN: long range, ultra-low power for agriculture and smart metering."},
-      {t:"Edge vs Cloud Computing",d:"Edge: process data at/near the device — low latency, works offline, saves bandwidth. Fog Computing: intermediate processing at gateways. Cloud: centralized, large-scale analytics. Smart systems use hybrid edge+cloud architecture."},
-      {t:"IoT Security Challenges",d:"Weak default credentials, absence of encryption, unpatched firmware, physical device access. Mirai Botnet (2016) hijacked 600,000 IoT cameras for a massive DDoS attack. Security must be designed in, not bolted on."},
-      {t:"Digital Twin",d:"A virtual replica of a physical system (machine, building, city) updated in real-time with IoT sensor data. Enables simulation, predictive maintenance, and optimization without touching the physical asset."}
-    ],
-    apps:[
-      "Smart Home: Nest thermostats, Ring doorbells, smart locks — controlled remotely via mobile app",
-      "Industrial IIoT: Tata Steel uses vibration sensors for predictive maintenance — prevents costly breakdowns",
-      "Healthcare IoMT: Continuous glucose monitors (Abbott FreeStyle) and cardiac patches send real-time data to doctors",
-      "Smart Agriculture: Maharashtra farmers use soil moisture + weather IoT sensors to cut irrigation water by 30%",
-      "Smart Cities: Pune Smart City — IoT-based adaptive traffic signals and smart street lighting",
-      "Cold Chain: Vaccines tracked with GPS + temperature sensors from manufacturer to patient"
-    ],
-    terms:["Sensor","Actuator","MQTT","Gateway","LoRaWAN","Edge Node","Fog Computing","Digital Twin","M2M","Smart Grid"],
-    quiz:"Internet of Things Quiz",
-    quizDesc:"Covers IoT architecture layers, protocol selection for different scenarios, edge vs cloud computing, and IoT security threats. Scenario questions: which protocol to use for low-power wide-area applications?",
-    exam:"4-layer IoT architecture is the most tested concept — know all 4 layers and what happens at each. Protocol selection: LoRaWAN for long-range low-power (agriculture), MQTT for all IoT messaging, Zigbee for smart home mesh. Indian context: Smart Cities Mission covers 100 cities — IoT backbone."
-  },
-  {
-    id:"m3", num:"03", icon:"🔐",
-    title:"Cybersecurity",
-    short:"CyberSec",
-    focus:"Essential concepts of digital security, identifying threats, and fundamental protective strategies for individuals and businesses.",
-    pathways:["Cybersecurity Fundamentals & CIA Triad","Types of Threats & Attack Vectors","Authentication & Access Control","Encryption & Cryptography","Network Security Architecture","Compliance, Governance & India's IT Act"],
-    overview:"Cybersecurity protects systems, networks, and data from digital attacks and unauthorized access. With 1.4 billion+ internet users in India and ₹18 lakh crore in digital payments, cybersecurity is a national priority. India experienced 1.4 million+ cyberattacks in 2022. This module builds the foundational security mindset required in every technology role.",
-    concepts:[
-      {t:"The CIA Triad",d:"The three non-negotiable pillars: Confidentiality (only authorized access — encryption), Integrity (data is accurate and unaltered — hashing, checksums), Availability (systems accessible when needed — redundancy, DDoS mitigation, backups)."},
-      {t:"Major Threat Categories",d:"Malware: viruses, worms, trojans, ransomware (WannaCry locked NHS hospitals for $300 ransom). Phishing: fake emails/sites steal credentials — 91% of attacks start here. DDoS: flood systems with traffic. SQL Injection: manipulate database queries. Zero-Day: exploit unknown vulnerabilities before patches exist."},
-      {t:"Authentication & Zero Trust",d:"MFA (Multi-Factor Authentication): password + OTP + biometric. RBAC: access based on job role. Principle of Least Privilege: minimum access needed. Zero Trust Architecture: 'never trust, always verify' — no implicit trust inside or outside the network perimeter."},
-      {t:"Encryption Fundamentals",d:"Symmetric (AES-256): same key encrypts and decrypts — fast, for data at rest. Asymmetric (RSA): public key encrypts, private key decrypts — for secure key exchange. TLS/SSL secures all web communications (HTTPS). End-to-end encryption: only sender and recipient can read (WhatsApp, Signal)."},
-      {t:"Network Security Tools",d:"Firewalls: filter traffic by predefined rules. IDS (Intrusion Detection System): alerts on suspicious activity. IPS (Intrusion Prevention System): blocks threats in real-time. VPN: encrypts internet tunnel. WAF (Web Application Firewall): protects web apps from OWASP Top 10 attacks."},
-      {t:"India's Legal Framework",d:"IT Act 2000 + Amendment 2008: sections 43 (unauthorized access), 66 (computer crimes), 66C (identity theft), 66F (cyber terrorism). CERT-In: national cybersecurity response agency. 2022 CERT-In directive: mandatory 6-hour incident reporting for 20+ categories of cyber incidents."}
-    ],
-    apps:[
-      "Banking: UPI fraud detection using ML — NPCI blocks 99.9%+ of fraudulent transactions in real-time",
-      "Government: Aadhaar biometric database security — protecting 1.3 billion identity records",
-      "Healthcare: ABDM (Ayushman Bharat Digital Mission) — securing 500 million patient health records",
-      "Corporate: SOC (Security Operations Center) monitors enterprise threats 24/7 using SIEM platforms",
-      "E-commerce: PCI-DSS compliance for payment card data security on Flipkart, Amazon India",
-      "Personal: Two-factor authentication on Gmail protects 1.8 billion accounts from account takeover"
-    ],
-    terms:["CIA Triad","Phishing","Ransomware","Zero-Day","MFA","Firewall","IDS/IPS","TLS/SSL","SIEM","CERT-In"],
-    quiz:"Cybersecurity Quiz",
-    quizDesc:"Tests understanding of the CIA Triad, threat identification, authentication mechanisms, encryption types, and network security tools. Common format: 'which security control addresses this threat?' scenarios.",
-    exam:"CIA Triad is the absolute foundation — know all 3 with examples. Phishing is #1 attack vector — always in exam. Symmetric (AES) vs Asymmetric (RSA) — know when each is used. Indian law: IT Act 2000 section numbers for different cybercrime categories. CERT-In 6-hour reporting rule is recent and exam-relevant."
-  },
-  {
-    id:"m4", num:"04", icon:"⛓️",
-    title:"Blockchain",
-    short:"Blockchain",
-    focus:"Introduction to Decentralised Ledgers, Cryptography, and the Revolutionary Applications of distributed ledger technology.",
-    pathways:["Blockchain Fundamentals & Data Structure","Cryptography: Hashing & Digital Signatures","Consensus Mechanisms","Smart Contracts & Ethereum","Public vs Private vs Consortium Chains","Blockchain Applications: Finance, Supply Chain, Governance"],
-    overview:"Blockchain is a distributed, decentralized, immutable ledger recording transactions across a peer-to-peer network. Created as Bitcoin's foundation in 2008 by Satoshi Nakamoto, its core properties — transparency, immutability, trustlessness, and decentralization — have made it transformative far beyond cryptocurrency, revolutionizing supply chains, digital identity, land records, and financial inclusion.",
-    concepts:[
-      {t:"Blockchain Data Structure",d:"Transactions grouped into Blocks. Each block contains: transaction data, timestamp, Merkle tree root (summary of all transactions), and hash of previous block — creating the chain. Any tampering changes the block hash, breaking the chain and alerting all nodes immediately."},
-      {t:"Cryptographic Foundations",d:"SHA-256 Hash: one-way function converting any data to a fixed 64-char string. Deterministic and collision-resistant. Digital Signatures: prove ownership using private key (sign) + public key (verify). Merkle Trees: efficiently summarize 1000s of transactions into one root hash per block."},
-      {t:"Consensus Mechanisms",d:"Proof of Work (PoW): miners race to solve SHA-256 puzzles — energy intensive but battle-tested (Bitcoin). Proof of Stake (PoS): validators stake crypto — 99.9% less energy (Ethereum post-Merge 2022). Delegated PoS, Proof of Authority for enterprise/private blockchains."},
-      {t:"Smart Contracts",d:"Self-executing code deployed on blockchain. Runs automatically when predefined conditions are met — zero intermediaries. Written in Solidity (Ethereum). Used in DeFi lending, insurance payouts, supply chain milestone payments, and automated governance voting."},
-      {t:"Blockchain Types",d:"Public (permissionless): open to all, fully decentralized — Bitcoin, Ethereum. Private (permissioned): restricted access, faster, for enterprise — Hyperledger Fabric. Consortium: controlled by group of orgs — R3 Corda (banking), TradeLens (shipping, Maersk+IBM)."},
-      {t:"Web3 & DeFi",d:"Web3: decentralized internet where users own data and assets, not corporations. DeFi (Decentralized Finance): financial services without banks — lending, borrowing, trading via smart contracts. NFTs: prove digital ownership on blockchain. DAOs: community-governed organizations."}
-    ],
-    apps:[
-      "Land Records: Andhra Pradesh & Telangana use Hyperledger to prevent land title fraud — immutable ownership",
-      "Supply Chain: Walmart traces contaminated food to source in 2.2 seconds (vs 7 days) using blockchain",
-      "Digital Currency: RBI's Digital Rupee (CBDC) pilot — 13 banks, cross-border payment use cases",
-      "Healthcare: Apollo Hospitals uses blockchain for secure, interoperable patient record sharing",
-      "Voting: Telangana blockchain voting pilot — tamper-proof, transparent electoral records",
-      "Trade Finance: ICICI Bank uses blockchain for Letter of Credit — reduced processing from 7 days to 4 hours"
-    ],
-    terms:["Hash","Merkle Tree","Smart Contract","PoW","PoS","Hyperledger","DeFi","NFT","CBDC","Solidity"],
-    quiz:"Blockchain Quiz",
-    quizDesc:"Covers blockchain structure, consensus mechanisms, smart contract logic, and blockchain types. Expect questions on which blockchain type to use for a given scenario, and how consensus ensures trust.",
-    exam:"Blockchain is NOT anonymous — it is pseudonymous (addresses public, identities private). Public vs Private vs Consortium — know examples for each. Smart contracts run on Ethereum (not Bitcoin). India: Andhra Pradesh land records, Digital Rupee CBDC, IndiaChain proposal by NITI Aayog."
-  },
-  {
-    id:"m5", num:"05", icon:"⚙️",
-    title:"Robotic Process Automation",
-    short:"RPA",
-    focus:"Learning how to utilise software bots to automate routine, high-volume tasks for enhanced operational efficiency.",
-    pathways:["RPA Fundamentals & What Bots Can Do","RPA Architecture: Studio, Bot & Orchestrator","Attended vs Unattended Automation","Intelligent Automation: RPA + AI","Leading RPA Platforms","RPA Implementation & ROI"],
-    overview:"RPA uses software robots to automate repetitive, rule-based digital tasks by interacting with applications through the UI — exactly as a human would, but 10-15x faster, with near-zero errors, and continuously. RPA delivers 25-50% cost reduction and 6-9 month ROI across banking, insurance, healthcare, and government — making it one of the fastest-growing enterprise software categories.",
-    concepts:[
-      {t:"What RPA Automates",d:"Rule-based, high-volume, repetitive, structured-data tasks: data entry across systems, form filling, invoice processing, copy-paste between applications, report generation, email parsing, compliance data collection, and reconciliation."},
-      {t:"RPA vs Intelligent Automation",d:"Basic RPA: rigid rules, only handles structured data, cannot make decisions. Intelligent Automation (IA) = RPA + AI/ML + NLP + OCR: reads unstructured documents (emails, invoices, contracts), makes decisions, handles exceptions. Also called Hyperautomation or Cognitive RPA."},
-      {t:"RPA Architecture (Three Components)",d:"Bot Creator: drag-and-drop workflow design studio (UiPath Studio, AA Developer). Bot Runner: executes automation on virtual or physical machines. Orchestrator/Control Room: centrally manages, monitors, schedules, logs, and controls all bots — the command center."},
-      {t:"Attended vs Unattended Bots",d:"Attended: runs on employee's machine, triggered manually to assist in real-time (call center: bot pulls customer data while agent talks). Unattended: runs 24/7 autonomously on server, no human needed (overnight batch invoice processing for 10,000 invoices)."},
-      {t:"RPA Business Value",d:"Speed: 10-15x faster than human processing. Accuracy: near-zero vs 4% human error rate. Cost: 25-50% operational cost reduction. Non-invasive: no changes to existing legacy systems — bots work on the UI layer. Scalable: spin up additional bots instantly for volume spikes."},
-      {t:"Leading Platforms",d:"UiPath: global market leader, strongest AI integration, most widely used in India (Wipro, Infosys, TCS). Automation Anywhere (A360): cloud-native, strong enterprise. Blue Prism: enterprise-grade, financial services. Microsoft Power Automate: deep Microsoft 365 integration."}
-    ],
-    apps:[
-      "Banking: SBI uses RPA for KYC document verification — reduced processing from 3 days to 4 hours",
-      "Insurance: LIC automates claims processing — from 10 days manual to 2 hours via attended bots",
-      "Healthcare: Apollo automates patient data entry, billing, and bed availability tracking across 70+ hospitals",
-      "HR: TCS automates onboarding workflows for 600,000+ employees — offer letters, access provisioning",
-      "Telecom: Airtel uses RPA for fault resolution ticket routing and customer data synchronization",
-      "Government: Ministry of Finance uses bots for pension calculation and disbursement processing"
-    ],
-    terms:["Bot","Orchestrator","Workflow","UiPath","Automation Anywhere","Blue Prism","OCR","Hyperautomation","Screen Scraping","Cognitive RPA"],
-    quiz:"RPA Quiz",
-    quizDesc:"Tests knowledge of RPA architecture components, attended vs unattended scenarios, what tasks RPA can and cannot automate, and ROI concepts. Scenario-based: 'which type of bot should be used for this process?'",
-    exam:"RPA does NOT require changes to existing IT systems — this is a major exam point. Key limitation: RPA alone cannot handle unstructured data (needs AI). Know all 3 architecture components: Creator, Runner, Orchestrator. India: NASSCOM reports India has 40%+ of global RPA implementations via IT services firms."
-  },
-  {
-    id:"m6", num:"06", icon:"🥽",
-    title:"Augmented & Virtual Reality",
-    short:"AR/VR",
-    focus:"Exploring immersive technologies and their practical use in fields like training, entertainment, and remote collaboration.",
-    pathways:["VR Fundamentals & Hardware","AR Fundamentals & Mobile AR","Mixed Reality & Spatial Computing","Enabling Technologies: SLAM, Eye-Tracking, Haptics","The Metaverse & XR Ecosystem","AR/VR in Industry, Training & Education"],
-    overview:"AR and VR are immersive technologies that alter or create digital experiences. VR replaces reality with a fully digital environment. AR overlays digital content onto the real world. Together under the Extended Reality (XR) umbrella with Mixed Reality (MR), these technologies are transforming training, healthcare, education, retail, and collaboration — and form the foundation of the emerging Metaverse.",
-    concepts:[
-      {t:"Virtual Reality (VR)",d:"Fully immersive 3D digital environment replacing the real world. Requires Head-Mounted Displays (HMDs) with built-in screens and motion tracking. Devices: Meta Quest 3, PlayStation VR2, HTC Vive. 6DoF tracking enables movement in all directions. Used for gaming, military training, therapy (PTSD, phobia treatment), and surgical simulation."},
-      {t:"Augmented Reality (AR)",d:"Digital content (3D models, text, animations) overlaid onto real-world camera view in real-time. Delivered via smartphones (ARKit for iOS, ARCore for Android) or AR glasses. Examples: Pokémon GO, IKEA Place app, Snapchat filters, Google Lens, Google Maps Live View AR navigation."},
-      {t:"Mixed Reality (MR) & XR",d:"MR: digital objects coexist and interact with real world in real-time (Microsoft HoloLens 2, Apple Vision Pro). XR (Extended Reality): umbrella term covering VR + AR + MR — the full Reality-Virtuality Continuum from fully physical to fully virtual."},
-      {t:"Enabling Technologies",d:"SLAM (Simultaneous Localization and Mapping): device understands its 3D position in space in real-time — foundation of all AR. Eye-tracking: gaze interaction and foveated rendering (Meta Quest Pro, Apple Vision Pro). Haptic feedback: vibration motors and force-feedback simulate touch in VR."},
-      {t:"The Metaverse",d:"Persistent, shared 3D virtual world combining VR/AR + blockchain + AI + 5G. Platforms: Meta Horizon Worlds, Decentraland, Microsoft Mesh (enterprise virtual meetings), Roblox. India's metaverse market projected at $79 billion by 2032. Use cases: virtual offices, digital commerce, immersive learning."},
-      {t:"AR/VR Development Stack",d:"Game Engines: Unity 3D (most common for VR/AR), Unreal Engine (photorealistic). AR SDKs: ARKit (iOS), ARCore (Android), Vuforia (enterprise AR). WebXR: AR/VR directly in browsers. 3D Assets: Blender, Maya. Haptic SDKs: bHaptics, SenseGlove."}
-    ],
-    apps:[
-      "Military: US Army IVAS system — Microsoft HoloLens for combat situational awareness and training",
-      "Medical Training: Osso VR surgical simulation — 230% better performance vs traditional training methods",
-      "Education: BYJU'S uses AR to visualize 3D biology and physics concepts in lessons",
-      "Real Estate: Magicbricks and NoBroker offer AR floor plan walkthroughs before construction completes",
-      "Retail: Lenskart AR try-on for glasses; Asian Paints ColourNext visualizes room colors in real-time",
-      "Manufacturing: Boeing uses AR maintenance manuals — overlaid wiring diagrams reduce assembly errors by 25%"
-    ],
-    terms:["HMD","6DoF","SLAM","ARKit","ARCore","Haptic","Metaverse","XR","Spatial Computing","Foveated Rendering"],
-    quiz:"AR/VR Quiz",
-    quizDesc:"Covers distinctions between VR/AR/MR, enabling technologies, 6DoF, and industry applications. Common question format: identify which XR technology is being described, or match technology to use case.",
-    exam:"Core distinction: VR = replaces reality; AR = overlays reality; MR = interactive blend. 6DoF = freedom to move in 3 rotational + 3 translational axes (full physical movement in virtual space). SLAM is the technology enabling AR positional awareness. India metaverse market size (₹6.5 lakh crore by 2032) may appear in application questions."
-  },
-  {
-    id:"m7", num:"07", icon:"☁️",
-    title:"Cloud Computing",
-    short:"Cloud",
-    focus:"Core concepts of cloud services (IaaS, PaaS, SaaS), deployment models, and scalable infrastructure management.",
-    pathways:["Cloud Computing Fundamentals & NIST Definition","IaaS, PaaS, SaaS Service Models","Deployment Models: Public, Private, Hybrid","Virtualization & Containerization","Cloud Security & Shared Responsibility","Cloud Providers & India's Cloud Ecosystem"],
-    overview:"Cloud Computing delivers computing services — servers, storage, databases, networking, software — over the internet with pay-as-you-go pricing. It eliminates capital expenditure on hardware, enables global scalability in minutes, and powers every major digital service. India's cloud market is growing at 23% annually, driven by government digitization, startup growth, and enterprise modernization.",
-    concepts:[
-      {t:"IaaS / PaaS / SaaS",d:"IaaS (Infrastructure): raw compute, storage, networking — you manage OS and apps (AWS EC2, Azure VMs, Google Compute Engine). PaaS (Platform): development environment + runtime — you manage only apps (Heroku, Google App Engine). SaaS (Software): complete ready-to-use apps (Gmail, Salesforce, Zoom, Microsoft 365)."},
-      {t:"Deployment Models",d:"Public Cloud: shared infrastructure, internet-accessible, owned by provider (AWS, Azure, GCP) — most cost-effective. Private Cloud: dedicated to one org, on-premise or hosted — high security. Hybrid Cloud: sensitive workloads on private + scalable on public. Multi-Cloud: 2+ providers to avoid vendor lock-in."},
-      {t:"NIST 5 Essential Characteristics",d:"On-demand self-service (provision without human interaction), Broad network access (any device via internet), Resource pooling (multi-tenant shared infrastructure), Rapid elasticity (scale instantly up or down), Measured service (pay only for what you consume)."},
-      {t:"Virtualization & Containers",d:"Virtualization: Hypervisors (VMware ESXi, KVM, Hyper-V) divide one physical server into multiple isolated VMs. Docker: packages app + all dependencies into lightweight portable container. Kubernetes (K8s): orchestrates thousands of containers across clusters — industry standard for cloud-native apps."},
-      {t:"Serverless & Microservices",d:"Serverless/FaaS: run functions without managing servers — AWS Lambda, Azure Functions, triggered by events, billed per millisecond of execution. Microservices: application decomposed into independent, loosely coupled services communicating via APIs — enables faster development and scaling."},
-      {t:"Cloud Security & Shared Responsibility",d:"Provider secures: physical infrastructure, network, hypervisor. Customer secures: data, applications, access control, encryption. IAM (Identity & Access Management): control who accesses what. VPC (Virtual Private Cloud): isolated network. Encryption at rest and in transit is mandatory best practice."}
-    ],
-    apps:[
-      "E-commerce: Flipkart autoscales to 10x capacity on AWS during Big Billion Days — zero downtime",
-      "Government: GSTN (GST Network) processes 3 billion+ invoices annually on cloud; DigiLocker on NIC Cloud",
-      "Streaming: JioCinema streamed IPL 2023 to 32 million concurrent viewers using Google Cloud — world record",
-      "Healthcare: ABDM (Ayushman Bharat Digital Mission) stores and links 500 million health records on cloud",
-      "Startups: Zomato, Swiggy, CRED — cloud-native, scaled to millions of users without owning a single server",
-      "Education: DIKSHA platform (2 crore+ students), SWAYAM MOOCs — national education on cloud"
-    ],
-    terms:["IaaS","PaaS","SaaS","Hypervisor","Docker","Kubernetes","Autoscaling","CDN","IAM","Serverless"],
-    quiz:"Cloud Computing Quiz",
-    quizDesc:"Tests IaaS/PaaS/SaaS distinctions with real examples, deployment model trade-offs, and cloud security concepts. Most common: identify service model from description, and which deployment model fits a given scenario.",
-    exam:"IaaS/PaaS/SaaS is the most tested concept — memorize a real example for each. AWS ~32% global cloud market share (leader), Azure ~23%, GCP ~12%. India government: MeitY-empanelled cloud providers for government workloads include AWS, Azure, GCP, NIC Cloud, and others. Serverless and Kubernetes are emerging exam topics."
-  },
-  {
-    id:"m8", num:"08", icon:"🖨️",
-    title:"3D Printing & Modeling",
-    short:"3D Print",
-    focus:"Fundamentals of additive manufacturing, design processes, and rapid prototyping applications.",
-    pathways:["Additive vs Subtractive Manufacturing","FDM Technology & Materials","SLA, SLS & Advanced Printing Technologies","CAD Software & the 3D Modeling Workflow","Design for Additive Manufacturing (DfAM)","Industry Applications & Rapid Prototyping"],
-    overview:"3D Printing (Additive Manufacturing) creates three-dimensional objects layer by layer from a digital model — adding material only where needed, unlike subtractive manufacturing (CNC milling, cutting). This enables rapid prototyping, mass customization, and geometric complexity impossible with traditional methods. 3D printing is transforming aerospace, medicine, construction, and education at national scale.",
-    concepts:[
-      {t:"How 3D Printing Works",d:"1. Create 3D model in CAD software (Fusion 360, SolidWorks, Blender). 2. Export as STL/OBJ/3MF file. 3. Slice using software (Cura, PrusaSlicer) — converts 3D model into layer-by-layer G-code instructions. 4. Print layer by layer (25–300 micron layer height). 5. Post-process: remove supports, sand, paint, or heat-treat."},
-      {t:"FDM — Fused Deposition Modeling",d:"Most affordable and common technology. Heats thermoplastic filament (PLA, ABS, PETG, Nylon, TPU) to melting point, extrudes through nozzle, deposits layer by layer on a build plate. Resolution: 50-300 microns. Popular printers: Bambu Lab X1, Prusa i3 MK4, Creality Ender 3. Best for: functional prototypes, mechanical parts."},
-      {t:"SLA — Stereolithography",d:"UV laser or masked LCD cures liquid photopolymer resin layer by layer. Resolution: 25-50 microns — exceptional detail. Best for: dental models, jewelry, miniatures, medical devices. Post-processing requires UV wash + cure station. Formlabs Form 4, Elegoo Saturn are popular printers."},
-      {t:"SLS & Metal Printing",d:"SLS (Selective Laser Sintering): CO₂ laser sinters nylon/polyamide powder — no support structures needed, strong isotropic parts. DMLS/SLM: fiber laser melts metal powder (titanium, Inconel, 316L stainless steel) layer by layer — aerospace, medical implants. Most expensive but unmatched strength and complexity."},
-      {t:"CAD & 3D Modeling Workflow",d:"Parametric CAD (Fusion 360, SolidWorks, FreeCAD): dimension-driven engineering models, precise tolerances. Mesh/Sculpting (Blender, ZBrush): organic shapes, artistic models. 3D Scanning (structured light, photogrammetry): digitize real objects. Generative Design: AI optimizes geometry for minimum weight + maximum strength automatically."},
-      {t:"Design for Additive Manufacturing (DfAM)",d:"Design principles optimized for 3D printing: minimize overhangs (>45° needs support), use lattice/honeycomb infill (30-40% weight saving), exploit layer orientation for strength, consolidate multiple assembled parts into single print, design internal channels impossible to machine."}
-    ],
-    apps:[
-      "Aerospace: GE prints LEAP jet engine fuel nozzles from cobalt-chrome alloy — 25% lighter, 5x more durable",
-      "Medical: Custom titanium hip implants matched to patient CT scan; 15 million 3D printed hearing aids annually",
-      "Defense: DRDO uses metal 3D printing for missile fins, UAV components, and rapid field spares",
-      "Automotive: Tata Motors and Mahindra use 3D printing for concept car prototyping and tooling fixtures",
-      "Construction: 3D printed post office in Bengaluru (2023, COBOD gantry printer) — India's first government building",
-      "Education: Atal Tinkering Labs in 10,000+ schools provide FDM printers for student project manufacturing"
-    ],
-    terms:["FDM","SLA","SLS","DMLS","CAD","STL File","G-Code","Slicer","Infill","Bioprinting"],
-    quiz:"3D Printing & Modeling Quiz",
-    quizDesc:"Covers differences between printing technologies, design workflow steps, material selection, and industry applications. Typical question: identify the correct technology for a given application or material requirement.",
-    exam:"FDM (affordable/functional), SLA (high detail), SLS (strong/no supports), DMLS (metal) — know which to use when. Additive (add material) vs Subtractive (remove material) manufacturing is fundamental. Bioprinting (living cells + bioink hydrogel for tissue engineering) is a hot topic — expect at least one question."
-  },
-  {
-    id:"m9", num:"09", icon:"🌐",
-    title:"Web, Mobile & Digital Marketing",
-    short:"Web/Mobile",
-    focus:"Basic concepts of digital presence, web development frameworks, and foundational Digital Marketing strategies.",
-    pathways:["Web Development Fundamentals: HTML, CSS, JS","Frontend Frameworks & Backend Stack","Mobile Development: Native vs Cross-Platform","APIs, Web Services & Integration","SEO, SEM & Digital Advertising","Social Media, Content Marketing & Analytics"],
-    overview:"Web and Mobile Development create digital applications and platforms. Digital Marketing builds strategies to reach and engage customers through digital channels. Together, these are the engine of India's $700 billion digital economy — from 750 million smartphone users to the ₹18 lakh crore UPI ecosystem. India has the world's 2nd largest developer community, making this module directly career-relevant.",
-    concepts:[
-      {t:"Web Development Stack",d:"Front-end (client-side): HTML (structure/content), CSS (styling/layout), JavaScript (interactivity/logic). Frameworks: React.js (Meta, component-based), Angular (Google, full framework), Vue.js (progressive). Back-end (server-side): Node.js, Python/Django, PHP, Java/Spring Boot. Databases: MySQL (relational), MongoDB (document), PostgreSQL."},
-      {t:"Mobile Development",d:"Native: Swift/Obj-C (iOS), Kotlin/Java (Android) — best performance, full platform features, separate codebases. Cross-platform: Flutter (Google/Dart) and React Native (Meta/JS) — one codebase for both platforms, 70-80% code reuse, faster development. PWA (Progressive Web App): web app with offline capability and push notifications, no app store needed."},
-      {t:"APIs & Web Services",d:"REST API: uses HTTP methods (GET/POST/PUT/DELETE), JSON data format — universal standard. GraphQL: client specifies exact data needed, reduces over-fetching — Facebook invented. WebSockets: full-duplex real-time communication (chat apps, live sports scores). Webhooks: event-triggered HTTP callbacks (payment confirmation notification)."},
-      {t:"SEO vs SEM",d:"SEO (Search Engine Optimization): improve organic (free) search ranking via content quality, page speed, mobile-friendliness, backlinks, technical optimization. Results: slow but sustainable. SEM/PPC (Paid Search): Google Ads, bidding on keywords for top placement. Cost Per Click (CPC). Results: immediate but requires budget."},
-      {t:"Digital Marketing Channels & Metrics",d:"Social Media Marketing: LinkedIn (B2B), Instagram/YouTube (brand awareness), Twitter/X (real-time). Email Marketing: highest ROI ($42 per $1 spent). Influencer Marketing: 5-11x better ROI vs traditional. Key Metrics: CTR (Click-Through Rate), Conversion Rate, CPC, CAC (Customer Acquisition Cost), ROAS, Bounce Rate."},
-      {t:"UX & Conversion Optimization",d:"UX (User Experience): designing for ease, accessibility, and delight. Mobile-First Design: 70%+ web traffic is mobile — design for small screens first. A/B Testing: compare two versions of a page to improve conversion. CRO (Conversion Rate Optimization): systematic improvement of user actions (purchase, signup)."}
-    ],
-    apps:[
-      "FinTech: PhonePe processes 50% of India's UPI — mobile app built with Flutter by Google",
-      "E-commerce: Meesho — social commerce platform, 120 million+ active users, mobile-first Flutter app",
-      "EdTech: BYJU'S — 150 million registered users, AI-personalized learning on mobile",
-      "Food Delivery: Swiggy and Zomato — React Native apps with real-time GPS tracking and payments",
-      "Government: UMANG app — 1,200+ government services (EPFO, DigiLocker, Aadhaar) in one mobile platform",
-      "Content: Moj and Josh (ShareChat) — short video platforms built for Bharat's 500M non-English mobile users"
-    ],
-    terms:["HTML/CSS/JS","React","Flutter","REST API","GraphQL","SEO","CTR","CPC","ROAS","A/B Testing"],
-    quiz:"Web, Mobile & Digital Marketing Quiz",
-    quizDesc:"Tests front-end vs back-end distinctions, native vs cross-platform trade-offs, REST API concepts, and digital marketing metrics. Metric calculation questions common: given clicks and impressions, calculate CTR.",
-    exam:"Front-end = what users see (HTML/CSS/JS). Back-end = server logic (Node, Django, etc.). CTR = (Clicks ÷ Impressions) × 100. Conversion Rate = (Conversions ÷ Visitors) × 100. Flutter is built by Google using Dart language. React Native uses JavaScript. India: 2nd largest developer community globally after USA."
-  },
-  {
-    id:"m10", num:"10", icon:"⚖️",
-    title:"Responsible AI",
-    short:"Resp. AI",
-    focus:"Critical understanding of the ethical considerations, fairness, transparency, and governance needed for developing and deploying AI systems.",
-    pathways:["AI Bias: Types, Causes & Real-World Failures","Explainability & Transparency in AI (XAI)","Privacy in AI: Federated Learning & Differential Privacy","AI Governance: EU AI Act & Global Frameworks","India's AI Policy: NITI Aayog & IndiaAI Mission","AI's Societal Impact: Jobs, Deepfakes & Environment"],
-    overview:"Responsible AI is the ethical development, deployment, and governance of AI systems. As AI impacts high-stakes decisions — healthcare diagnoses, loan approvals, parole decisions, hiring — ensuring fairness, transparency, accountability, and privacy is critical. With India's IndiaAI Mission (₹10,372 crore) and the global EU AI Act (2024), this is the fastest-evolving policy domain in technology.",
-    concepts:[
-      {t:"AI Bias & Fairness",d:"AI perpetuates and amplifies biases present in training data. Types: Historical bias (data reflects past inequalities — e.g., male-dominated hiring data), Representation bias (minority groups underrepresented — facial recognition fails on darker skin), Measurement bias (inaccurate proxy variables used). Real failure: Amazon's AI hiring tool discriminated against women — scrapped 2018."},
-      {t:"Explainability & XAI",d:"XAI (Explainable AI): AI systems whose decisions can be understood and traced by humans. Black-box models (deep neural networks) vs interpretable models (decision trees, linear regression). Tools: LIME (explains individual predictions locally), SHAP (quantifies each feature's contribution to prediction). Critical for medical AI, credit scoring, and legal decisions."},
-      {t:"Privacy in AI Systems",d:"AI training requires large datasets, raising serious privacy concerns. Federated Learning: model trains on distributed data without data ever leaving the device — used by Google (Gboard keyboard). Differential Privacy: add carefully calibrated mathematical noise to datasets — Apple uses for usage statistics. Data Minimization: collect only what is strictly necessary."},
-      {t:"EU AI Act (2024)",d:"World's first comprehensive AI law. Risk-based approach: Unacceptable Risk (banned) — social credit scoring, real-time biometric mass surveillance in public. High Risk (strict requirements) — AI in healthcare, hiring, judiciary, critical infrastructure. Limited Risk (disclosure) — chatbots must identify as AI. Minimal Risk (voluntary) — spam filters, video games."},
-      {t:"India's AI Policy",d:"NITI Aayog Responsible AI for All (2021): 7 principles — Safety & Reliability, Equality, Inclusivity, Privacy & Security, Transparency, Accountability, Protection & Reinforcement of Positive Human Values. IndiaAI Mission (2024): ₹10,372 crore for sovereign AI compute (10,000+ GPU cluster), national datasets, AI startups, and safe & trusted AI framework."},
-      {t:"Societal & Environmental Impact",d:"Jobs: WEF estimates 85 million roles displaced but 97 million new roles created by 2025 — net positive but transition disruption is real. Deepfakes: AI-generated fake video/audio — electoral misinformation, financial fraud, non-consensual imagery. Environment: training GPT-4 consumed ~50 GWh electricity. Green AI advocates for efficient architectures and renewable-powered data centers."}
-    ],
-    apps:[
-      "Hiring: LinkedIn and Naukri audit AI screening tools quarterly for gender and caste bias in Indian context",
-      "Criminal Justice: COMPAS algorithm (US) showed racial bias in parole recommendations — landmark bias case study",
-      "Healthcare: FDA requires explainability reports for AI medical devices — doctors must understand model reasoning",
-      "Finance: RBI mandates that banks explain AI-based credit rejection reasons clearly to customers",
-      "Facial Recognition: Delhi Police AI face recognition pilot — civil society raised false-positive bias concerns",
-      "Content Moderation: Meta and YouTube AI moderation — challenged for inconsistency across regional languages"
-    ],
-    terms:["XAI","Bias","Fairness","Federated Learning","Differential Privacy","EU AI Act","SHAP","LIME","Deepfake","AI Alignment"],
-    quiz:"Responsible AI Quiz",
-    quizDesc:"Tests AI bias types, explainability tools, privacy-preserving techniques, EU AI Act risk tiers, and India's AI policy framework. Scenario questions: identify the type of bias in a given situation, or classify an AI system under EU AI Act risk tiers.",
-    exam:"4 pillars of Responsible AI: Fairness, Transparency, Accountability, Privacy. EU AI Act 4 risk tiers — know examples for each, especially Unacceptable Risk (banned) vs High Risk (regulated). India: IndiaAI Mission ₹10,372 crore (2024) is the biggest recent policy development. Federated Learning = privacy-preserving ML — know how it works and where it's used."
-  }
-];
-
-// Build nav pills
-const pillsEl = document.getElementById('navPills');
-modules.forEach(m => {
-  const a = document.createElement('a');
-  a.className = 'nav-pill';
-  a.href = '#' + m.id;
-  a.textContent = m.num + ' · ' + m.short;
-  a.setAttribute('data-id', m.id);
-  pillsEl.appendChild(a);
-});
-
-// Build module HTML
-const container = document.getElementById('moduleContainer');
-modules.forEach((m, i) => {
-  // Pathways list
-  const pwHTML = m.pathways.map((p, pi) =>
-    `<span class="ch-pathway">${String(pi+1).padStart(2,'0')} · ${p}</span>`
-  ).join('');
-
-  // Concepts
-  const conHTML = m.concepts.map(c =>
-    `<div class="cc"><div class="cc-title">${c.t}</div><div class="cc-desc">${c.d}</div></div>`
-  ).join('');
-
-  // Apps
-  const appHTML = m.apps.map(a =>
-    `<div class="app-item"><span class="app-arrow">→</span><span>${a}</span></div>`
-  ).join('');
-
-  // Terms
-  const termHTML = m.terms.map(t => `<span class="term">${t}</span>`).join('');
-
-  const section = document.createElement('div');
-  section.id = m.id;
-  section.innerHTML = `
-    <div class="chapter-div">
-      <div class="ch-ghost">${m.num}</div>
-      <div class="ch-tag">Module ${m.num} of 10 · ${m.icon} ${m.short} · ${m.pathways.length} Pathways × 30 min</div>
-      <h2 class="ch-title">${m.title}</h2>
-      <p class="ch-focus">${m.focus}</p>
-      <div class="ch-pathways">${pwHTML}</div>
-    </div>
-
-    <div class="module-body">
-      <div class="overview">${m.overview}</div>
-
-      <div class="sh"><span class="sh-label">Core Concepts</span><div class="sh-line"></div></div>
-      <div class="concepts-grid">${conHTML}</div>
-
-      <div class="sh"><span class="sh-label">Real-World Applications</span><div class="sh-line"></div></div>
-      <div class="apps-list">${appHTML}</div>
-
-      <div class="sh"><span class="sh-label">Key Terms</span><div class="sh-line"></div></div>
-      <div class="terms-row">${termHTML}</div>
-
-      <div class="sh"><span class="sh-label">Assessment</span><div class="sh-line"></div></div>
-      <div class="quiz-box">
-        <div class="quiz-icon">📝</div>
-        <div class="quiz-content">
-          <div class="quiz-label">Pathway Quiz — ${m.num}</div>
-          <div class="quiz-title">${m.quiz}</div>
-          <div class="quiz-desc">${m.quizDesc}</div>
-        </div>
-      </div>
-
-      <div class="exam-tip">
-        <div class="et-num">!</div>
-        <div class="et-label">NASSCOM Exam Tip</div>
-        ${m.exam}
-      </div>
-    </div>`;
-  container.appendChild(section);
-});
-
-// Active nav pill on scroll
-const sections = modules.map(m => document.getElementById(m.id));
-const pills = document.querySelectorAll('.nav-pill');
-
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      pills.forEach(p => p.classList.remove('active'));
-      const active = document.querySelector(`.nav-pill[data-id="${e.target.id}"]`);
-      if (active) {
-        active.classList.add('active');
-        active.scrollIntoView({ inline: 'nearest', behavior: 'smooth' });
-      }
-    }
-  });
-}, { threshold: 0.15 });
-
-sections.forEach(s => { if(s) obs.observe(s); });
+function openSidebar(){
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebarOverlay').classList.add('show');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+}
 
 // Back to top
-window.addEventListener('scroll', () => {
-  document.getElementById('backTop').classList.toggle('vis', scrollY > 500);
+window.addEventListener('scroll',()=>{
+  document.getElementById('btt').classList.toggle('vis', scrollY > 400);
+});
+
+// Active nav link
+const sections = ['cover','m1','m2','m3','m4','m5','m6','m7','m8','m9','m10'];
+const links = document.querySelectorAll('.nav-link');
+
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      links.forEach(l=>l.classList.remove('active'));
+      const active = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+      if(active) active.classList.add('active');
+    }
+  });
+},{threshold:0.2});
+
+sections.forEach(id=>{
+  const el = document.getElementById(id);
+  if(el) obs.observe(el);
 });
 </script>
 </body>
 </html>
+ENDOFFILE
